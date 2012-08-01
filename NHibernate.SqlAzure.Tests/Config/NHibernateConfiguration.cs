@@ -1,6 +1,7 @@
 ﻿using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using NHibernate.Cfg;
 using NHibernate.Driver;
 
 namespace NHibernate.SqlAzure.Tests.Config
@@ -26,7 +27,7 @@ namespace NHibernate.SqlAzure.Tests.Config
                         .UseOverridesFromAssemblyOf<NHibernateConfiguration<SqlClientDriver>>()
                     )
                 )
-                /*.ExposeConfiguration(c => c.SetProperty("hbm2ddl.keywords", "none"))*/;
+                .ExposeConfiguration(c => c.SetProperty(Environment.ConnectionProvider, typeof(SqlAzureDriverConnectionProvider).AssemblyQualifiedName));
 
             return config.BuildSessionFactory();
         }
