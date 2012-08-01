@@ -10,7 +10,7 @@ namespace NHibernate.SqlAzure.Tests.Config
     {
         private ISessionFactory _sessionFactory;
         protected ISession Session;
-        private TransactionScope _transactionScope;
+        //private TransactionScope _transactionScope;
         protected FluentRunner Migrator;
 
         [TestFixtureSetUp]
@@ -22,14 +22,14 @@ namespace NHibernate.SqlAzure.Tests.Config
         [SetUp]
         public virtual void Setup()
         {
-            _transactionScope = new TransactionScope();
+            //_transactionScope = new TransactionScope();
             Session = _sessionFactory.OpenSession();
         }
 
         [TearDown]
         public void TearDown()
         {
-            _transactionScope.Dispose();
+            //_transactionScope.Dispose();
         }
 
         private void Initialize(string connectionString, Assembly migrationAssembly)

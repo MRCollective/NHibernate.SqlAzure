@@ -27,7 +27,14 @@ namespace NHibernate.SqlAzure.Tests.Config
                         .UseOverridesFromAssemblyOf<NHibernateConfiguration<SqlClientDriver>>()
                     )
                 )
-                .ExposeConfiguration(c => c.SetProperty(Environment.ConnectionProvider, typeof(SqlAzureDriverConnectionProvider).AssemblyQualifiedName));
+                // Show SQL so we can see what and when sql is executed by NH
+                .ExposeConfiguration(c => c.SetProperty(Environment.ShowSql, "true"))
+                // Turn off cache to make sure all calls actually go to the database
+                .ExposeConfiguration(c => c.SetProperty(Environment.UseQueryCache, "false"))
+                .ExposeConfiguration(c => c.SetProperty(Environment.UseSecondLevelCache, "false"));
+
+            if (typeof(T) == typeof(SqlAzureClientDriver))
+                config = config.ExposeConfiguration(c => c.SetProperty(Environment.ConnectionProvider, typeof(SqlAzureDriverConnectionProvider).AssemblyQualifiedName));
 
             return config.BuildSessionFactory();
         }
