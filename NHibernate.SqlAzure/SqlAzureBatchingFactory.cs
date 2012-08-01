@@ -1,6 +1,13 @@
-﻿namespace NHibernate.SqlAzure
+﻿using NHibernate.AdoNet;
+using NHibernate.Engine;
+
+namespace NHibernate.SqlAzure
 {
-    class SqlAzureBatchingFactory
+    public class SqlAzureBatchingFactory : IBatcherFactory
     {
+        public virtual IBatcher CreateBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
+        {
+            return new SqlAzureBatcher(connectionManager, interceptor);
+        }
     }
 }
