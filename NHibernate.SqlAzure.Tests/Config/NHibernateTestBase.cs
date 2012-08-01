@@ -6,9 +6,9 @@ using NUnit.Framework;
 
 namespace NHibernate.SqlAzure.Tests.Config
 {
-    public abstract class NHibernateTestBase
+    public abstract class NHibernateTestBase<T> where T: SqlClientDriver
     {
-        private static ISessionFactory _sessionFactory;
+        private ISessionFactory _sessionFactory;
         protected ISession Session;
         private TransactionScope _transactionScope;
         protected FluentRunner Migrator;
@@ -41,7 +41,7 @@ namespace NHibernate.SqlAzure.Tests.Config
 
             Migrator.MigrateToLatest();
 
-            var nHibernateConfig = new NHibernateConfiguration<Sql2008ClientDriver>(connectionString);
+            var nHibernateConfig = new NHibernateConfiguration<T>(connectionString);
             _sessionFactory = nHibernateConfig.GetSessionFactory();
         }
 

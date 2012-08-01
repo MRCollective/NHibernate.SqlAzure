@@ -6,7 +6,7 @@ using NHibernate.Driver;
 
 namespace NHibernate.SqlAzure
 {
-    public class SqlAzureDriver : Sql2008ClientDriver//, IEmbeddedBatcherFactoryProvider
+    public class SqlAzureClientDriver : Sql2008ClientDriver//, IEmbeddedBatcherFactoryProvider
     {
         public override IDbConnection CreateConnection()
         {

@@ -77,7 +77,7 @@
     <Compile Include="SqlAzureBatcher.cs" />
     <Compile Include="SqlAzureBatchingFactory.cs" />
     <Compile Include="SqlAzureCommandSet.cs" />
-    <Compile Include="SqlAzureDriver.cs" />
+    <Compile Include="SqlAzureClientDriver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
