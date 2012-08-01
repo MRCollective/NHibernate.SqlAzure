@@ -6,26 +6,26 @@ using NHibernate.Driver;
 
 namespace NHibernate.SqlAzure
 {
-    public class SqlAzureDriver : Sql2008ClientDriver, IEmbeddedBatcherFactoryProvider
+    public class SqlAzureDriver : Sql2008ClientDriver//, IEmbeddedBatcherFactoryProvider
     {
         public override IDbConnection CreateConnection()
         {
             return new ReliableSqlConnection(null);
         }
 
-        public override IDbCommand CreateCommand()
+        /*public override IDbCommand CreateCommand()
         {
             return new SqlAzureCommand();
-        }
+        }*/
 
-        public System.Type BatcherFactoryClass
+        /*public System.Type BatcherFactoryClass
         {
             get { return typeof(SqlAzureBatchingFactory); }
-        }
+        }*/
     }
 
 
-    public class SqlAzureCommand : IDbCommand
+    /*public class SqlAzureCommand : IDbCommand
     {
         private readonly System.Data.SqlClient.SqlCommand _command;
 
@@ -120,5 +120,5 @@ namespace NHibernate.SqlAzure
             get { return _command.UpdatedRowSource; }
             set { _command.UpdatedRowSource = value; }
         }
-    }
+    }*/
 }

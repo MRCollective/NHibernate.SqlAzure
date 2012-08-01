@@ -13,7 +13,7 @@ namespace NHibernate.SqlAzure
     /// <summary>
     /// Summary description for SqlClientBatchingBatcher.
     /// </summary>
-    public class SqlAzureBatcher : AbstractBatcher
+    /*public class SqlAzureBatcher : AbstractBatcher
     {
         private int batchSize;
         private int totalExpectedRowsAffected;
@@ -123,5 +123,5 @@ namespace NHibernate.SqlAzure
 
             return result;
         }
-    }
+    }*/
 }

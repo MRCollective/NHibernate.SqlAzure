@@ -13,7 +13,7 @@ namespace NHibernate.SqlAzure
     /// 
     /// Observable performance benefits are 50%+ when used, so it is really worth it.
     /// </summary>
-    public class SqlAzureCommandSet : IDisposable
+    /*public class SqlAzureCommandSet : IDisposable
     {
         private static System.Type sqlCmdSetType;
         private object instance;
@@ -158,5 +158,5 @@ namespace NHibernate.SqlAzure
         private delegate void DisposeCommand();
 
         #endregion
-    }
+    }*/
 }

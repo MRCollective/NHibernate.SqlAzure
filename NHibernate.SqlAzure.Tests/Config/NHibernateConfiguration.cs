@@ -26,7 +26,7 @@ namespace NHibernate.SqlAzure.Tests.Config
                         .UseOverridesFromAssemblyOf<NHibernateConfiguration<SqlClientDriver>>()
                     )
                 )
-                .ExposeConfiguration(c => c.SetProperty("hbm2ddl.keywords", "none"));
+                /*.ExposeConfiguration(c => c.SetProperty("hbm2ddl.keywords", "none"))*/;
 
             return config.BuildSessionFactory();
         }
