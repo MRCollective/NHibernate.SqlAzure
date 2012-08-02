@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure;
 using Microsoft.Practices.TransientFaultHandling;
@@ -23,21 +21,8 @@ namespace NHibernate.SqlAzure
             retryStrategies.Add(new ExponentialBackoff(backoff, 10, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(10), false));
 
             var retryManager = new RetryManagerImpl(retryStrategies, interval, backoff, incremental, interval, interval, interval);
-            var sqlCommandRetryPolicy = retryManager.GetDefaultSqlCommandRetryPolicy();
-            sqlCommandRetryPolicy.Retrying += LogRetry();
-            var sqlConnectionRetryPolicy = retryManager.GetDefaultSqlConnectionRetryPolicy();
-            sqlConnectionRetryPolicy.Retrying += LogRetry();
-            
-            return new ReliableSqlConnection(null, sqlConnectionRetryPolicy, sqlCommandRetryPolicy);
-        }
 
-        private static EventHandler<RetryingEventArgs> LogRetry()
-        {
-            return (sender, args) =>
-            {
-                var msg = String.Format("SQLAzureClientDriver Retry - Count:{0}, Delay:{1}, Exception:{2}", args.CurrentRetryCount, args.Delay, args.LastException);
-                Trace.TraceInformation(msg);
-            };
+            return new ReliableSqlConnection(null, retryManager.GetDefaultSqlConnectionRetryPolicy(), retryManager.GetDefaultSqlCommandRetryPolicy());
         }
 
         /*public override IDbCommand CreateCommand()
@@ -50,7 +35,6 @@ namespace NHibernate.SqlAzure
             get { return typeof(SqlAzureBatchingFactory); }
         }*/
     }
-
 
     /*public class SqlAzureCommand : IDbCommand
     {
