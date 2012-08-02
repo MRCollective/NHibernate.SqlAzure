@@ -29,6 +29,11 @@ To use the provider:
 2. Set the `connection.driver_class` property on the session factory configuration to `NHibernate.SqlAzure.SqlAzureClientDriver, NHibernate.SqlAzure`
 3. Set the `connection.provider` property on the session factory configuration to `NHibernate.SqlAzure.SqlAzureDriverConnectionProvider, NHibernate.SqlAzure`
 
+Extending the provider or adding logging for failed attempts
+------------------------------------------------------------
+
+Follow the pattern that the `TestableSqlAzureClientDriver` class uses to extend the `SqlAzureClientDriver` class and tack onto the events that the `RetryPolicy`'s expose.
+
 Running the tests
 -----------------
 
