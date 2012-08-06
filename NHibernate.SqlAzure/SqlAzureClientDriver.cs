@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure;
 using Microsoft.Practices.TransientFaultHandling;
@@ -25,10 +26,10 @@ namespace NHibernate.SqlAzure
             return new ReliableSqlConnection(null, retryManager.GetDefaultSqlConnectionRetryPolicy(), retryManager.GetDefaultSqlCommandRetryPolicy());
         }
 
-        /*public override IDbCommand CreateCommand()
+        public override IDbCommand CreateCommand()
         {
             return new SqlAzureCommand();
-        }*/
+        }
 
         /*public System.Type BatcherFactoryClass
         {
@@ -36,7 +37,7 @@ namespace NHibernate.SqlAzure
         }*/
     }
 
-    /*public class SqlAzureCommand : IDbCommand
+    public class SqlAzureCommand : IDbCommand
     {
         private readonly System.Data.SqlClient.SqlCommand _command;
 
@@ -131,5 +132,5 @@ namespace NHibernate.SqlAzure
             get { return _command.UpdatedRowSource; }
             set { _command.UpdatedRowSource = value; }
         }
-    }*/
+    }
 }
