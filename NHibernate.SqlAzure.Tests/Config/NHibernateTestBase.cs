@@ -27,7 +27,7 @@ namespace NHibernate.SqlAzure.Tests.Config
         }
 
         [TearDown]
-        public void TearDown()
+        public virtual void TearDown()
         {
             //_transactionScope.Dispose();
         }
