@@ -92,7 +92,8 @@
     <Compile Include="Config\FluentRunner.cs" />
     <Compile Include="Config\NHibernateConfiguration.cs" />
     <Compile Include="Config\NHibernateTestBase.cs" />
-    <Compile Include="Config\TestableSqlAzureClientDriver.cs" />
+    <Compile Include="Config\LocalTestingSqlAzureClientDriver.cs" />
+    <Compile Include="Config\SqlExpressTransientErrorDetectionStrategy.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Migrations\20120801141148_CreateUserTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

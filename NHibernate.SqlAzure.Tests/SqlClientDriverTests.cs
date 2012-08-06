@@ -14,7 +14,7 @@ namespace NHibernate.SqlAzure.Tests
     // Also, test the retry logic actually fires by using the LocalTestingSqlAzureClientDriver that provides
     //  a reliable connection with a local error specific transient error detection strategy
     [TestFixture]
-    class SqlAzureClientDriverShould : SqlClientDriverShould<TestableSqlAzureClientDriver>
+    class LocalTestingSqlAzureClientDriverShould : SqlClientDriverShould<LocalTestingSqlAzureClientDriver>
     {
         [Test]
         public virtual void Recover_from_temporary_shutdown_of_sql_server()
@@ -30,7 +30,8 @@ namespace NHibernate.SqlAzure.Tests
         }
     }
 
-
+    [TestFixture]
+    class SqlAzureClientDriverShould : SqlClientDriverShould<SqlAzureClientDriver> {}
 
     [TestFixture]
     class Sql2008ClientDriverShould : SqlClientDriverShould<Sql2008ClientDriver>
