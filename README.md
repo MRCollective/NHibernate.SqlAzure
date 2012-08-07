@@ -13,12 +13,6 @@ To use the provider:
 
         Fluently.Configure()
             .Database(MsSqlConfiguration.MsSql2008.ConnectionString(connectionString).Driver<SqlAzureClientDriver>())
-3. Set the `Environment.ConnectionProvider` property of the session factory configuration to `typeof(SqlAzureDriverConnectionProvider).AssemblyQualifiedName)`, e.g.:
-
-        Fluently.Configure()
-            ...
-            .ExposeConfiguration(c => c.SetProperty(Environment.ConnectionProvider, typeof(SqlAzureDriverConnectionProvider).AssemblyQualifiedName))
-
 
 Using the provider when using an XML configuration
 --------------------------------------------------
@@ -27,7 +21,6 @@ To use the provider:
 
 1. `Install-Package NHibernate.SqlAzure`
 2. Set the `connection.driver_class` property on the session factory configuration to `NHibernate.SqlAzure.SqlAzureClientDriver, NHibernate.SqlAzure`
-3. Set the `connection.provider` property on the session factory configuration to `NHibernate.SqlAzure.SqlAzureDriverConnectionProvider, NHibernate.SqlAzure`
 
 Extending the provider or adding logging for failed attempts
 ------------------------------------------------------------
