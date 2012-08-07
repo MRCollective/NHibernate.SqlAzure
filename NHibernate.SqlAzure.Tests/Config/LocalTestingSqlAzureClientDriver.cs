@@ -12,17 +12,17 @@ namespace NHibernate.SqlAzure.Tests.Config
 
         public override IDbConnection CreateConnection()
         {
-            var baseConnection = (ReliableSqlConnection) base.CreateConnection();
+            var baseConnection = (ReliableSqlDbConnection) base.CreateConnection();
 
             var connection = new ReliableSqlConnection(null,
-                new RetryPolicy<SqlExpressTransientErrorDetectionStrategy>(baseConnection.ConnectionRetryPolicy.RetryStrategy),
-                new RetryPolicy<SqlExpressTransientErrorDetectionStrategy>(baseConnection.CommandRetryPolicy.RetryStrategy)
+                new RetryPolicy<SqlExpressTransientErrorDetectionStrategy>(baseConnection.ReliableConnection.ConnectionRetryPolicy.RetryStrategy),
+                new RetryPolicy<SqlExpressTransientErrorDetectionStrategy>(baseConnection.ReliableConnection.CommandRetryPolicy.RetryStrategy)
             );
 
             connection.CommandRetryPolicy.Retrying += LogRetry();
             connection.ConnectionRetryPolicy.Retrying += LogRetry();
             
-            return connection;
+            return new ReliableSqlDbConnection(connection);
         }
 
         private static EventHandler<RetryingEventArgs> LogRetry()

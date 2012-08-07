@@ -33,9 +33,6 @@ namespace NHibernate.SqlAzure.Tests.Config
                 .ExposeConfiguration(c => c.SetProperty(Environment.UseQueryCache, "false"))
                 .ExposeConfiguration(c => c.SetProperty(Environment.UseSecondLevelCache, "false"));
 
-            if (typeof(SqlAzureClientDriver).IsAssignableFrom(typeof(T)))
-                config = config.ExposeConfiguration(c => c.SetProperty(Environment.ConnectionProvider, typeof(SqlAzureDriverConnectionProvider).AssemblyQualifiedName));
-
             return config.BuildSessionFactory();
         }
     }
