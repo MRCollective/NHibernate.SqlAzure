@@ -117,6 +117,8 @@ namespace NHibernate.SqlAzure.Tests
                 _serviceController.Refresh();
                 _serviceController.Continue();
                 _serviceController.WaitForStatus(ServiceControllerStatus.Running);
+
+                Thread.Sleep(20);
             }
         }
 

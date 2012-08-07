@@ -9,10 +9,10 @@ namespace NHibernate.SqlAzure.Tests.Config
     {
         public bool IsTransient(Exception ex)
         {
-            // Is the error an error 25 (Can't connect to instance aka service is stopped)
+            // Is the error an error 17142 - the service is paused?
             var sqlException = ex as SqlException;
             return sqlException != null
-                && sqlException.Errors.Cast<SqlError>().Any(error => error.Number == 25);
+                && sqlException.Errors.Cast<SqlError>().Any(error => error.Number == 17142);
         }
     }
 }
