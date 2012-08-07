@@ -88,7 +88,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\FakeSqlExceptionGenerator.cs" />
     <Compile Include="Config\FluentRunner.cs" />
     <Compile Include="Config\NHibernateConfiguration.cs" />
     <Compile Include="Config\NHibernateTestBase.cs" />
