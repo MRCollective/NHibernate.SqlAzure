@@ -74,12 +74,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReliableSqlDbConnection.cs" />
     <Compile Include="SqlAzureBatcher.cs" />
     <Compile Include="SqlAzureBatchingFactory.cs" />
+    <Compile Include="SqlAzureCommand.cs" />
     <Compile Include="SqlAzureCommandSet.cs" />
-    <Compile Include="SqlAzureClientDriver.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="SqlAzureClientDriver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
