@@ -20,13 +20,26 @@ namespace NHibernate.SqlAzure.Tests
     class LocalTestingSqlAzureClientDriverShould : SqlClientDriverShould<LocalTestingSqlAzureClientDriver>
     {
         [Test]
-        public void Execute_commands_during_temporary_shutdown_of_sql_server()
+        public void Execute_non_batching_commands_during_temporary_shutdown_of_sql_server()
         {
             using (TemporarilyShutdownSqlServerExpress())
             {
                 for (var i = 0; i < 100; i++)
                 {
                     Insert_and_select_entity();
+                    Thread.Sleep(50);
+                }
+            }
+        }
+
+        [Test]
+        public void Execute_batching_commands_during_temporary_shutdown_of_sql_server()
+        {
+            using (TemporarilyShutdownSqlServerExpress())
+            {
+                for (var i = 0; i < 100; i++)
+                {
+                    Insert_and_select_multiple_entities();
                     Thread.Sleep(50);
                 }
             }
@@ -47,13 +60,27 @@ namespace NHibernate.SqlAzure.Tests
     {
         [Test]
         [ExpectedException(typeof(GenericADOException))]
-        public void Fail_to_execute_commands_during_temporary_shutdown_of_sql_server()
+        public void Fail_to_execute_non_batching_commands_during_temporary_shutdown_of_sql_server()
         {
             using (TemporarilyShutdownSqlServerExpress())
             {
                 for (var i = 0; i < 100; i++)
                 {
                     Insert_and_select_entity();
+                    Thread.Sleep(50);
+                }
+            }
+        }
+
+        [Test]
+        [ExpectedException(typeof(HibernateException))] // Could be TransactionException or GenericADOException
+        public void Fail_to_execute_batching_commands_during_temporary_shutdown_of_sql_server()
+        {
+            using (TemporarilyShutdownSqlServerExpress())
+            {
+                for (var i = 0; i < 100; i++)
+                {
+                    Insert_and_select_multiple_entities();
                     Thread.Sleep(50);
                 }
             }
