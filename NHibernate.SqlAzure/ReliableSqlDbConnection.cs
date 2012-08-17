@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure;
 
 namespace NHibernate.SqlAzure
@@ -15,6 +16,11 @@ namespace NHibernate.SqlAzure
         public ReliableSqlDbConnection(ReliableSqlConnection connection)
         {
             ReliableConnection = connection;
+        }
+
+        public static explicit operator SqlConnection(ReliableSqlDbConnection connection)
+        {
+            return connection.ReliableConnection.Current;
         }
 
         public new void Dispose()

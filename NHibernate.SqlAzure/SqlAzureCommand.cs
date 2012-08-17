@@ -6,60 +6,65 @@ namespace NHibernate.SqlAzure
 {
     public class SqlAzureCommand : IDbCommand
     {
-        private readonly System.Data.SqlClient.SqlCommand _command;
+        public System.Data.SqlClient.SqlCommand Current { get; private set; }
 
         public SqlAzureCommand()
         {
-            _command = new System.Data.SqlClient.SqlCommand();
+            Current = new System.Data.SqlClient.SqlCommand();
+        }
+
+        public static explicit operator System.Data.SqlClient.SqlCommand(SqlAzureCommand command)
+        {
+            return command.Current;
         }
 
         public void Dispose()
         {
-            _command.Dispose();
+            Current.Dispose();
         }
 
         public void Prepare()
         {
-            _command.Prepare();
+            Current.Prepare();
         }
 
         public void Cancel()
         {
-            _command.Cancel();
+            Current.Cancel();
         }
 
         public IDbDataParameter CreateParameter()
         {
-            return _command.CreateParameter();
+            return Current.CreateParameter();
         }
 
         public int ExecuteNonQuery()
         {
-            return ReliableConnection.ExecuteCommand(_command);
+            return ReliableConnection.ExecuteCommand(Current);
         }
 
         public IDataReader ExecuteReader()
         {
-            return ReliableConnection.ExecuteCommand<IDataReader>(_command);
+            return ReliableConnection.ExecuteCommand<IDataReader>(Current);
         }
 
         public IDataReader ExecuteReader(CommandBehavior behavior)
         {
-            return ReliableConnection.ExecuteCommand<IDataReader>(_command, behavior);
+            return ReliableConnection.ExecuteCommand<IDataReader>(Current, behavior);
         }
 
         public object ExecuteScalar()
         {
-            return ReliableConnection.ExecuteCommand<int>(_command);
+            return ReliableConnection.ExecuteCommand<int>(Current);
         }
 
         public IDbConnection Connection
         {
-            get { return _command.Connection; }
+            get { return Current.Connection; }
             set
             {
                 ReliableConnection = ((ReliableSqlDbConnection)value).ReliableConnection;
-                _command.Connection = ReliableConnection.Current;
+                Current.Connection = ReliableConnection.Current;
             }
         }
 
@@ -67,37 +72,37 @@ namespace NHibernate.SqlAzure
 
         public IDbTransaction Transaction
         {
-            get { return _command.Transaction; }
-            set { _command.Transaction = (SqlTransaction)value; }
+            get { return Current.Transaction; }
+            set { Current.Transaction = (SqlTransaction)value; }
         }
 
         public string CommandText
         {
-            get { return _command.CommandText; }
-            set { _command.CommandText = value; }
+            get { return Current.CommandText; }
+            set { Current.CommandText = value; }
         }
 
         public int CommandTimeout
         {
-            get { return _command.CommandTimeout; }
-            set { _command.CommandTimeout = value; }
+            get { return Current.CommandTimeout; }
+            set { Current.CommandTimeout = value; }
         }
 
         public CommandType CommandType
         {
-            get { return _command.CommandType; }
-            set { _command.CommandType = value; }
+            get { return Current.CommandType; }
+            set { Current.CommandType = value; }
         }
 
         public IDataParameterCollection Parameters
         {
-            get { return _command.Parameters; }
+            get { return Current.Parameters; }
         }
 
         public UpdateRowSource UpdatedRowSource
         {
-            get { return _command.UpdatedRowSource; }
-            set { _command.UpdatedRowSource = value; }
+            get { return Current.UpdatedRowSource; }
+            set { Current.UpdatedRowSource = value; }
         }
     }
 }

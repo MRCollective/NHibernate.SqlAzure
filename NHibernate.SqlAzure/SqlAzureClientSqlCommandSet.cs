@@ -30,7 +30,7 @@ namespace NHibernate.SqlAzure
 
         static SqlAzureClientSqlCommandSet()
         {
-            Assembly sysData = Assembly.Load("System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+            Assembly sysData = Assembly.Load("System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
             sqlCmdSetType = sysData.GetType("System.Data.SqlClient.SqlCommandSet");
             Debug.Assert(sqlCmdSetType != null, "Could not find SqlCommandSet!");
         }

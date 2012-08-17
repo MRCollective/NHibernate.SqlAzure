@@ -2,6 +2,7 @@
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Reflection;
 using System.Text;
 using NHibernate.AdoNet;
 using NHibernate.AdoNet.Util;
@@ -12,6 +13,7 @@ namespace NHibernate.SqlAzure
 {
     public class SqlAzureClientBatchingBatcher : AbstractBatcher
     {
+        private readonly ConnectionManager _connectionManager;
         private int _batchSize;
         private int _totalExpectedRowsAffected;
         private SqlAzureClientSqlCommandSet _currentBatch;
@@ -21,6 +23,7 @@ namespace NHibernate.SqlAzure
         public SqlAzureClientBatchingBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
             : base(connectionManager, interceptor)
         {
+            _connectionManager = connectionManager;
             _batchSize = Factory.Settings.AdoBatchSize;
             _defaultTimeout = PropertiesHelper.GetInt32(Cfg.Environment.CommandTimeout, Cfg.Environment.Properties, -1);
 
@@ -64,11 +67,48 @@ namespace NHibernate.SqlAzure
             {
                 Log.Debug("Adding to batch:" + lineWithParameters);
             }
-            _currentBatch.Append((System.Data.SqlClient.SqlCommand)batchUpdate);
+            _currentBatch.Append((System.Data.SqlClient.SqlCommand)(SqlAzureCommand)batchUpdate);
 
             if (_currentBatch.CountOfCommands >= _batchSize)
             {
                 ExecuteBatchWithTiming(batchUpdate);
+            }
+        }
+
+        /// <summary>
+        /// Prepares the <see cref="IDbCommand"/> for execution in the database.
+        /// </summary>
+        /// <remarks>
+        /// This takes care of hooking the <see cref="IDbCommand"/> up to an <see cref="IDbConnection"/>
+        /// and <see cref="IDbTransaction"/> if one exists.  It will call <c>Prepare</c> if the Driver
+        /// supports preparing commands.
+        /// </remarks>
+        protected new void Prepare(IDbCommand cmd)
+        {
+            try
+            {
+                var sessionConnection = (ReliableSqlDbConnection)_connectionManager.GetConnection();
+
+                if (cmd.Connection != null)
+                {
+                    // make sure the commands connection is the same as the Sessions connection
+                    // these can be different when the session is disconnected and then reconnected
+                    if (cmd.Connection != sessionConnection)
+                    {
+                        cmd.Connection = (System.Data.SqlClient.SqlConnection) sessionConnection;
+                    }
+                }
+                else
+                {
+                    cmd.Connection = (System.Data.SqlClient.SqlConnection) sessionConnection;
+                }
+
+                _connectionManager.Transaction.Enlist(cmd);
+                Driver.PrepareCommand(cmd);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                throw new ADOException("While preparing " + cmd.CommandText + " an error occurred", ioe);
             }
         }
 
