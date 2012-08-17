@@ -1,56 +1,53 @@
-﻿using System.Data;
+﻿// This file was copied from NHibernate.AdoNet.SqlClientBatchingBatcherFactory, but modified to use SqlAzureClientSqlCommandSet
+using System;
+using System.Data;
 using System.Data.Common;
 using System.Text;
 using NHibernate.AdoNet;
 using NHibernate.AdoNet.Util;
 using NHibernate.Exceptions;
 using NHibernate.Util;
-using System;
-using Environment = NHibernate.Cfg.Environment;
 
 namespace NHibernate.SqlAzure
 {
-    /// <summary>
-    /// Summary description for SqlClientBatchingBatcher.
-    /// </summary>
-    /*public class SqlAzureBatcher : AbstractBatcher
+    public class SqlAzureClientBatchingBatcher : AbstractBatcher
     {
-        private int batchSize;
-        private int totalExpectedRowsAffected;
-        private SqlAzureCommandSet currentBatch;
-        private StringBuilder currentBatchCommandsLog;
-        private readonly int defaultTimeout;
+        private int _batchSize;
+        private int _totalExpectedRowsAffected;
+        private SqlAzureClientSqlCommandSet _currentBatch;
+        private StringBuilder _currentBatchCommandsLog;
+        private readonly int _defaultTimeout;
 
-        public SqlAzureBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
+        public SqlAzureClientBatchingBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
             : base(connectionManager, interceptor)
         {
-            batchSize = Factory.Settings.AdoBatchSize;
-            defaultTimeout = PropertiesHelper.GetInt32(Environment.CommandTimeout, Environment.Properties, -1);
+            _batchSize = Factory.Settings.AdoBatchSize;
+            _defaultTimeout = PropertiesHelper.GetInt32(Cfg.Environment.CommandTimeout, Cfg.Environment.Properties, -1);
 
-            currentBatch = CreateConfiguredBatch();
+            _currentBatch = CreateConfiguredBatch();
             //we always create this, because we need to deal with a scenario in which
             //the user change the logging configuration at runtime. Trying to put this
             //behind an if(log.IsDebugEnabled) will cause a null reference exception 
             //at that point.
-            currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
+            _currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
         }
 
         public override int BatchSize
         {
-            get { return batchSize; }
-            set { batchSize = value; }
+            get { return _batchSize; }
+            set { _batchSize = value; }
         }
 
         protected override int CountOfStatementsInCurrentBatch
         {
-            get { return currentBatch.CountOfCommands; }
+            get { return _currentBatch.CountOfCommands; }
         }
 
         public override void AddToBatch(IExpectation expectation)
         {
-            totalExpectedRowsAffected += expectation.ExpectedRowCount;
+            _totalExpectedRowsAffected += expectation.ExpectedRowCount;
             IDbCommand batchUpdate = CurrentCommand;
-
+            Driver.AdjustCommand(batchUpdate);
             string lineWithParameters = null;
             var sqlStatementLogger = Factory.Settings.SqlStatementLogger;
             if (sqlStatementLogger.IsDebugEnabled || Log.IsDebugEnabled)
@@ -58,8 +55,8 @@ namespace NHibernate.SqlAzure
                 lineWithParameters = sqlStatementLogger.GetCommandLineWithParameters(batchUpdate);
                 var formatStyle = sqlStatementLogger.DetermineActualStyle(FormatStyle.Basic);
                 lineWithParameters = formatStyle.Formatter.Format(lineWithParameters);
-                currentBatchCommandsLog.Append("command ")
-                    .Append(currentBatch.CountOfCommands)
+                _currentBatchCommandsLog.Append("command ")
+                    .Append(_currentBatch.CountOfCommands)
                     .Append(":")
                     .AppendLine(lineWithParameters);
             }
@@ -67,9 +64,9 @@ namespace NHibernate.SqlAzure
             {
                 Log.Debug("Adding to batch:" + lineWithParameters);
             }
-            currentBatch.Append(batchUpdate);
+            _currentBatch.Append((System.Data.SqlClient.SqlCommand)batchUpdate);
 
-            if (currentBatch.CountOfCommands >= batchSize)
+            if (_currentBatch.CountOfCommands >= _batchSize)
             {
                 ExecuteBatchWithTiming(batchUpdate);
             }
@@ -79,38 +76,38 @@ namespace NHibernate.SqlAzure
         {
             Log.DebugFormat("Executing batch");
             CheckReaders();
-            Prepare(currentBatch.BatchCommand);
+            Prepare(_currentBatch.BatchCommand);
             if (Factory.Settings.SqlStatementLogger.IsDebugEnabled)
             {
-                Factory.Settings.SqlStatementLogger.LogBatchCommand(currentBatchCommandsLog.ToString());
-                currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
+                Factory.Settings.SqlStatementLogger.LogBatchCommand(_currentBatchCommandsLog.ToString());
+                _currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
             }
 
             int rowsAffected;
             try
             {
-                rowsAffected = currentBatch.ExecuteNonQuery();
+                rowsAffected = _currentBatch.ExecuteNonQuery();
             }
             catch (DbException e)
             {
                 throw ADOExceptionHelper.Convert(Factory.SQLExceptionConverter, e, "could not execute batch command.");
             }
 
-            Expectations.VerifyOutcomeBatched(totalExpectedRowsAffected, rowsAffected);
+            Expectations.VerifyOutcomeBatched(_totalExpectedRowsAffected, rowsAffected);
 
-            currentBatch.Dispose();
-            totalExpectedRowsAffected = 0;
-            currentBatch = CreateConfiguredBatch();
+            _currentBatch.Dispose();
+            _totalExpectedRowsAffected = 0;
+            _currentBatch = CreateConfiguredBatch();
         }
 
-        private SqlAzureCommandSet CreateConfiguredBatch()
+        private SqlAzureClientSqlCommandSet CreateConfiguredBatch()
         {
-            var result = new SqlAzureCommandSet();
-            if (defaultTimeout > 0)
+            var result = new SqlAzureClientSqlCommandSet();
+            if (_defaultTimeout > 0)
             {
                 try
                 {
-                    result.CommandTimeout = defaultTimeout;
+                    result.CommandTimeout = _defaultTimeout;
                 }
                 catch (Exception e)
                 {
@@ -123,5 +120,5 @@ namespace NHibernate.SqlAzure
 
             return result;
         }
-    }*/
+    }
 }

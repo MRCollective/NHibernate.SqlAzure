@@ -1,4 +1,5 @@
-﻿using System;
+﻿// This file was copied from NHibernate.AdoNet.SqlClientSqlCommandSet, but modified to remove the type-cast to SqlConnection
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -13,7 +14,7 @@ namespace NHibernate.SqlAzure
     /// 
     /// Observable performance benefits are 50%+ when used, so it is really worth it.
     /// </summary>
-    /*public class SqlAzureCommandSet : IDisposable
+    public class SqlAzureClientSqlCommandSet : IDisposable
     {
         private static System.Type sqlCmdSetType;
         private object instance;
@@ -21,20 +22,20 @@ namespace NHibernate.SqlAzure
         private PropSetter<SqlTransaction> transactionSetter;
         private PropSetter<int> commandTimeoutSetter;
         private PropGetter<SqlConnection> connectionGetter;
-        private PropGetter<System.Data.SqlClient.SqlCommand> commandGetter;
+        private SqlAzureClientSqlCommandSet.PropGetter<System.Data.SqlClient.SqlCommand> commandGetter;
         private AppendCommand doAppend;
         private ExecuteNonQueryCommand doExecuteNonQuery;
         private DisposeCommand doDispose;
         private int countOfCommands = 0;
 
-        static SqlAzureCommandSet()
+        static SqlAzureClientSqlCommandSet()
         {
             Assembly sysData = Assembly.Load("System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
             sqlCmdSetType = sysData.GetType("System.Data.SqlClient.SqlCommandSet");
             Debug.Assert(sqlCmdSetType != null, "Could not find SqlCommandSet!");
         }
 
-        public SqlAzureCommandSet()
+        public SqlAzureClientSqlCommandSet()
         {
             instance = Activator.CreateInstance(sqlCmdSetType, true);
             connectionSetter = (PropSetter<SqlConnection>)
@@ -50,8 +51,8 @@ namespace NHibernate.SqlAzure
                                Delegate.CreateDelegate(typeof(PropGetter<SqlConnection>),
                                                        instance, "get_Connection");
             commandGetter =
-                (PropGetter<System.Data.SqlClient.SqlCommand>)
-                Delegate.CreateDelegate(typeof(AzurePropGetter<System.Data.SqlClient.SqlCommand>), instance,
+                (SqlAzureClientSqlCommandSet.PropGetter<System.Data.SqlClient.SqlCommand>)
+                Delegate.CreateDelegate(typeof(SqlAzureClientSqlCommandSet.PropGetter<System.Data.SqlClient.SqlCommand>), instance,
                                         "get_BatchCommand");
             doAppend = (AppendCommand)Delegate.CreateDelegate(typeof(AppendCommand), instance, "Append");
             doExecuteNonQuery = (ExecuteNonQueryCommand)
@@ -64,7 +65,7 @@ namespace NHibernate.SqlAzure
         /// Append a command to the batch
         /// </summary>
         /// <param name="command"></param>
-        public void Append(IDbCommand command)
+        public void Append(System.Data.SqlClient.SqlCommand command)
         {
             AssertHasParameters(command);
             doAppend(command);
@@ -76,7 +77,7 @@ namespace NHibernate.SqlAzure
         /// the command has no parameters.
         /// </summary>
         /// <param name="command"></param>
-        private static void AssertHasParameters(IDbCommand command)
+        private static void AssertHasParameters(System.Data.SqlClient.SqlCommand command)
         {
             if (command.Parameters.Count == 0)
             {
@@ -147,8 +148,6 @@ namespace NHibernate.SqlAzure
 
         private delegate void PropSetter<T>(T item);
 
-        private delegate T AzurePropGetter<T>();
-
         private delegate T PropGetter<T>();
 
         private delegate void AppendCommand(System.Data.SqlClient.SqlCommand command);
@@ -158,5 +157,5 @@ namespace NHibernate.SqlAzure
         private delegate void DisposeCommand();
 
         #endregion
-    }*/
+    }
 }

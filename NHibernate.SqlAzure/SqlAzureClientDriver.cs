@@ -4,11 +4,12 @@ using System.Data;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure;
 using Microsoft.Practices.TransientFaultHandling;
+using NHibernate.AdoNet;
 using NHibernate.Driver;
 
 namespace NHibernate.SqlAzure
 {
-    public class SqlAzureClientDriver : Sql2008ClientDriver//, IEmbeddedBatcherFactoryProvider
+    public class SqlAzureClientDriver : Sql2008ClientDriver, IEmbeddedBatcherFactoryProvider
     {
         public override IDbConnection CreateConnection()
         {
@@ -31,9 +32,9 @@ namespace NHibernate.SqlAzure
             return new SqlAzureCommand();
         }
 
-        /*public System.Type BatcherFactoryClass
+        public System.Type BatcherFactoryClass
         {
-            get { return typeof(SqlAzureBatchingFactory); }
-        }*/
+            get { return typeof(SqlAzureClientBatchingBatcherFactory); }
+        }
     }
 }
