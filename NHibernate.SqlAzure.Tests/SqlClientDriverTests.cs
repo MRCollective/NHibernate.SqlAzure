@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
+using FizzWare.NBuilder;
 using NHibernate.Driver;
 using NHibernate.Exceptions;
 using NHibernate.SqlAzure.Tests.Config;
@@ -17,16 +20,22 @@ namespace NHibernate.SqlAzure.Tests
     class LocalTestingSqlAzureClientDriverShould : SqlClientDriverShould<LocalTestingSqlAzureClientDriver>
     {
         [Test]
-        public virtual void Recover_from_temporary_shutdown_of_sql_server()
+        public void Execute_commands_during_temporary_shutdown_of_sql_server()
         {
             using (TemporarilyShutdownSqlServerExpress())
             {
                 for (var i = 0; i < 100; i++)
                 {
-                    Perform_simple_select();
+                    Insert_and_select_entity();
                     Thread.Sleep(50);
                 }
             }
+        }
+
+        [Test]
+        public void Establish_connection_during_temporary_shutdown_of_sql_server()
+        {
+            // todo
         }
     }
 
@@ -38,16 +47,22 @@ namespace NHibernate.SqlAzure.Tests
     {
         [Test]
         [ExpectedException(typeof(GenericADOException))]
-        public virtual void Fail_with_temporary_shutdown_of_sql_server()
+        public void Fail_to_execute_commands_during_temporary_shutdown_of_sql_server()
         {
             using (TemporarilyShutdownSqlServerExpress())
             {
                 for (var i = 0; i < 100; i++)
                 {
-                    Perform_simple_select();
+                    Insert_and_select_entity();
                     Thread.Sleep(50);
                 }
             }
+        }
+
+        [Test]
+        public void Fail_to_establish_connection_during_temporary_shutdown_of_sql_server()
+        {
+            // todo
         }
     }
 
@@ -56,30 +71,83 @@ namespace NHibernate.SqlAzure.Tests
         [Test]
         public void Perform_empty_select()
         {
-            var user = Session.Get<User>(1); ;
+            var user = Session.Get<User>(-1);
 
             Assert.That(user, Is.Null);
         }
 
         [Test]
-        public void Perform_simple_select()
+        public void Insert_and_select_entity()
         {
             var user = new User { Name = "Name" };
             var session = CreateSession();
             session.Save(user);
-            session.Evict(user);
             session.Flush();
+            session.Evict(user);
 
             var dbUser = Session.Get<User>(user.Id);
 
             Assert.That(dbUser.Name, Is.EqualTo(user.Name));
         }
 
+        [Test]
+        public void Insert_and_select_multiple_entities()
+        {
+            var users = Builder<User>.CreateListOfSize(100)
+                .All().With(u => u.Properties = new List<UserProperty>
+                {
+                    new UserProperty {Name = "Name", Value = "Value", User = u}
+                })
+                .Build().OrderBy(u => u.Name).ToList();
+            using (var t = Session.BeginTransaction())
+            {
+                users.ForEach(u => Session.Save(u));
+                t.Commit();
+            }
+            Session.Flush();
+            users.ForEach(u => Session.Evict(u));
+
+            var dbUsers = Session.QueryOver<User>()
+                .WhereRestrictionOn(u => u.Id).IsIn(users.Select(u => u.Id).ToArray())
+                .OrderBy(u => u.Name).Asc
+                .List();
+
+            Assert.That(dbUsers, Has.Count.EqualTo(users.Count));
+            for (var i = 0; i < users.Count; i++)
+            {
+                Assert.That(dbUsers[i], Has.Property("Name").EqualTo(users[i].Name), "User " + i);
+                Assert.That(dbUsers[i], Has.Property("Id").EqualTo(users[i].Id), "User " + i);
+                var userProperties = dbUsers[i].Properties;
+                Assert.That(userProperties, Is.Not.Null, "User " + i + " Properties");
+                Assert.That(userProperties, Has.Count.EqualTo(1), "User " + i + " Properties");
+                Assert.That(userProperties[0], Has.Property("Name").EqualTo("Name"), "User " + i + " property 0");
+                Assert.That(userProperties[0], Has.Property("Value").EqualTo("Value"), "User " + i + " property 0");
+            }
+        }
+
+        [Test]
+        public void Select_a_scalar()
+        {
+            // todo
+        }
+
+        [Test]
+        public void Insert_and_update_an_entity()
+        {
+            // todo
+        }
+
+        [Test]
+        public void Insert_and_update_multiple_entities()
+        {
+            // todo
+        }
+
         #region SQLExpress shutdown code
         private readonly ServiceController _serviceController = new ServiceController { MachineName = Environment.MachineName, ServiceName = "MSSQL$SQLEXPRESS" };
 
         [TearDown]
-        public override void TearDown()
+        public void TearDown()
         {
             // Make sure that the service is running before stopping the test
             _serviceController.Refresh();

@@ -1,8 +1,11 @@
 ﻿using FluentNHibernate.Automapping;
+using FluentNHibernate.Automapping.Alterations;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using HibernatingRhinos.Profiler.Appender.NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Driver;
+using NHibernate.SqlAzure.Tests.Entities;
 
 namespace NHibernate.SqlAzure.Tests.Config
 {
@@ -19,6 +22,8 @@ namespace NHibernate.SqlAzure.Tests.Config
 
         public ISessionFactory GetSessionFactory()
         {
+            NHibernateProfiler.Initialize();
+
             var config = Fluently.Configure()
                 .Database(_databaseConfig)
                 .Mappings(m => m.AutoMappings
@@ -28,12 +33,28 @@ namespace NHibernate.SqlAzure.Tests.Config
                     )
                 )
                 // Show SQL so we can see what and when sql is executed by NH
-                .ExposeConfiguration(c => c.SetProperty(Environment.ShowSql, "true"))
+                .ExposeConfiguration(c => c.SetProperty(Environment.BatchSize, "10"));
                 // Turn off cache to make sure all calls actually go to the database
-                .ExposeConfiguration(c => c.SetProperty(Environment.UseQueryCache, "false"))
-                .ExposeConfiguration(c => c.SetProperty(Environment.UseSecondLevelCache, "false"));
+                //.ExposeConfiguration(c => c.SetProperty(Environment.UseQueryCache, "false"))
+                //.ExposeConfiguration(c => c.SetProperty(Environment.UseSecondLevelCache, "false"));
 
             return config.BuildSessionFactory();
+        }
+    }
+
+    public class UserPropertyOverride : IAutoMappingOverride<UserProperty>
+    {
+        public void Override(AutoMapping<UserProperty> mapping)
+        {
+            mapping.CompositeId().KeyProperty(u => u.Name).KeyReference(u => u.User, "UserId");
+        }
+    }
+
+    public class UserOverride : IAutoMappingOverride<User>
+    {
+        public void Override(AutoMapping<User> mapping)
+        {
+            mapping.HasMany(u => u.Properties).KeyColumn("UserId").Cascade.All();
         }
     }
 }
