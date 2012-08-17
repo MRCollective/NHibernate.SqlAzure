@@ -33,10 +33,10 @@ namespace NHibernate.SqlAzure.Tests.Config
                     )
                 )
                 // Show SQL so we can see what and when sql is executed by NH
-                .ExposeConfiguration(c => c.SetProperty(Environment.BatchSize, "10"));
+                .ExposeConfiguration(c => c.SetProperty(Environment.BatchSize, "10"))
                 // Turn off cache to make sure all calls actually go to the database
-                //.ExposeConfiguration(c => c.SetProperty(Environment.UseQueryCache, "false"))
-                //.ExposeConfiguration(c => c.SetProperty(Environment.UseSecondLevelCache, "false"));
+                .ExposeConfiguration(c => c.SetProperty(Environment.UseQueryCache, "false"))
+                .ExposeConfiguration(c => c.SetProperty(Environment.UseSecondLevelCache, "false"));
 
             return config.BuildSessionFactory();
         }

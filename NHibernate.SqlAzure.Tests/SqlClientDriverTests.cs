@@ -82,8 +82,6 @@ namespace NHibernate.SqlAzure.Tests
             var user = new User { Name = "Name" };
             var session = CreateSession();
             session.Save(user);
-            session.Flush();
-            session.Evict(user);
 
             var dbUser = Session.Get<User>(user.Id);
 
@@ -104,8 +102,6 @@ namespace NHibernate.SqlAzure.Tests
                 users.ForEach(u => Session.Save(u));
                 t.Commit();
             }
-            Session.Flush();
-            users.ForEach(u => Session.Evict(u));
 
             var dbUsers = Session.QueryOver<User>()
                 .WhereRestrictionOn(u => u.Id).IsIn(users.Select(u => u.Id).ToArray())
