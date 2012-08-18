@@ -15,7 +15,7 @@ namespace NHibernate.SqlAzure
         {
             var connection = (ReliableSqlDbConnection)session.Connection;
 
-            connection.ReliableConnection.CommandRetryPolicy.ExecuteAction(
+            RetryingAdoTransaction.ExecuteWithRetry(connection,
                 () => base.ExecuteWorkInIsolation(session, work, transacted)
             );
         }

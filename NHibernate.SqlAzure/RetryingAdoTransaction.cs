@@ -20,8 +20,18 @@ namespace NHibernate.SqlAzure
 
         public new void Begin(IsolationLevel isolationLevel)
         {
-            _connection.ReliableConnection.CommandRetryPolicy.ExecuteAction(
-                () => base.Begin(isolationLevel)
+            ExecuteWithRetry(_connection, () => base.Begin(isolationLevel));
+        }
+
+        public static void ExecuteWithRetry(ReliableSqlDbConnection connection, System.Action action)
+        {
+            connection.ReliableConnection.CommandRetryPolicy.ExecuteAction(() =>
+                {
+                    if (connection.State != ConnectionState.Open)
+                        connection.Open();
+
+                    action();
+                }
             );
         }
     }

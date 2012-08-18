@@ -37,7 +37,7 @@ namespace NHibernate.SqlAzure.Tests
         {
             using (TemporarilyShutdownSqlServerExpress())
             {
-                for (var i = 0; i < 100; i++)
+                for (var i = 0; i < 20; i++)
                 {
                     Insert_and_select_multiple_entities();
                     Thread.Sleep(50);
@@ -73,18 +73,30 @@ namespace NHibernate.SqlAzure.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(HibernateException))] // Could be TransactionException or GenericADOException
+        [ExpectedException(typeof(ExpectedErrorException))]
         public void Fail_to_execute_batching_commands_during_temporary_shutdown_of_sql_server()
         {
-            using (TemporarilyShutdownSqlServerExpress())
+            try
             {
-                for (var i = 0; i < 100; i++)
+                using (TemporarilyShutdownSqlServerExpress())
                 {
-                    Insert_and_select_multiple_entities();
-                    Thread.Sleep(50);
+                    for (var i = 0; i < 100; i++)
+                    {
+                        Insert_and_select_multiple_entities();
+                        Thread.Sleep(50);
+                    }
                 }
             }
+            catch(GenericADOException)
+            {
+                throw new ExpectedErrorException();
+            }
+            catch(TransactionException)
+            {
+                throw new ExpectedErrorException();
+            }
         }
+        public class ExpectedErrorException : Exception {}
 
         [Test]
         public void Fail_to_establish_connection_during_temporary_shutdown_of_sql_server()
