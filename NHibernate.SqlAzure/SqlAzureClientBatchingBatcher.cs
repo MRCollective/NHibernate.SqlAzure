@@ -1,4 +1,5 @@
-﻿// This file was copied from NHibernate.AdoNet.SqlClientBatchingBatcherFactory, but modified to use SqlAzureClientSqlCommandSet
+﻿// Parts of this file were copied from NHibernate.AdoNet.SqlClientBatchingBatcherFactory, but modified to use ReliableSqlDbConnection
+// The #regions indicate the copied code
 using System;
 using System.Data;
 using System.Data.Common;
@@ -7,47 +8,57 @@ using System.Text;
 using NHibernate.AdoNet;
 using NHibernate.AdoNet.Util;
 using NHibernate.Exceptions;
-using NHibernate.Util;
 
 namespace NHibernate.SqlAzure
 {
-    public class SqlAzureClientBatchingBatcher : AbstractBatcher
+    public class SqlAzureClientBatchingBatcher : SqlClientBatchingBatcher
     {
+        #region Impersonate private fields in base class
         private readonly ConnectionManager _connectionManager;
-        private int _batchSize;
-        private int _totalExpectedRowsAffected;
-        private SqlAzureClientSqlCommandSet _currentBatch;
-        private StringBuilder _currentBatchCommandsLog;
-        private readonly int _defaultTimeout;
+        private readonly FieldInfo _totalExpectedRowsAffectedField = typeof(SqlClientBatchingBatcher)
+            .GetField("_totalExpectedRowsAffected", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly FieldInfo _currentBatchField = typeof (SqlClientBatchingBatcher)
+            .GetField("_currentBatch", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly FieldInfo _currentBatchCommandsLogField = typeof(SqlClientBatchingBatcher)
+            .GetField("_currentBatchCommandsLog", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo _createConfiguredBatchMethod = typeof (SqlClientBatchingBatcher)
+            .GetMethod("CreateConfiguredBatch", BindingFlags.Instance | BindingFlags.NonPublic);
 
+        private int _totalExpectedRowsAffected
+        {
+            get { return (int)_totalExpectedRowsAffectedField.GetValue(this); }
+            set { _totalExpectedRowsAffectedField.SetValue(this, value); }
+        }
+        private SqlClientSqlCommandSet _currentBatch
+        {
+            get { return (SqlClientSqlCommandSet)_currentBatchField.GetValue(this); }
+            set { _currentBatchField.SetValue(this, value); }
+        }
+        private StringBuilder _currentBatchCommandsLog
+        {
+            get { return (StringBuilder) _currentBatchCommandsLogField.GetValue(this); }
+            set { _currentBatchCommandsLogField.SetValue(this, value); }
+        }
+        private int _batchSize
+        {
+            get { return BatchSize; }
+        }
+
+        private SqlClientSqlCommandSet CreateConfiguredBatch()
+        {
+            return (SqlClientSqlCommandSet)_createConfiguredBatchMethod.Invoke(this, null);
+        }
+        
         public SqlAzureClientBatchingBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
             : base(connectionManager, interceptor)
         {
             _connectionManager = connectionManager;
-            _batchSize = Factory.Settings.AdoBatchSize;
-            _defaultTimeout = PropertiesHelper.GetInt32(Cfg.Environment.CommandTimeout, Cfg.Environment.Properties, -1);
-
-            _currentBatch = CreateConfiguredBatch();
-            //we always create this, because we need to deal with a scenario in which
-            //the user change the logging configuration at runtime. Trying to put this
-            //behind an if(log.IsDebugEnabled) will cause a null reference exception 
-            //at that point.
-            _currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
         }
-
-        public override int BatchSize
-        {
-            get { return _batchSize; }
-            set { _batchSize = value; }
-        }
-
-        protected override int CountOfStatementsInCurrentBatch
-        {
-            get { return _currentBatch.CountOfCommands; }
-        }
+        #endregion
 
         public override void AddToBatch(IExpectation expectation)
         {
+            #region NHibernate code
             _totalExpectedRowsAffected += expectation.ExpectedRowCount;
             IDbCommand batchUpdate = CurrentCommand;
             Driver.AdjustCommand(batchUpdate);
@@ -67,12 +78,45 @@ namespace NHibernate.SqlAzure
             {
                 Log.Debug("Adding to batch:" + lineWithParameters);
             }
+            #endregion
             _currentBatch.Append((System.Data.SqlClient.SqlCommand)(SqlAzureCommand)batchUpdate);
-
+            #region NHibernate code
             if (_currentBatch.CountOfCommands >= _batchSize)
             {
                 ExecuteBatchWithTiming(batchUpdate);
             }
+            #endregion
+        }
+
+        // Need this method call in this class rather than the base class to ensure Prepare is called... if only it was virtual :(
+        protected void ExecuteBatch(IDbCommand ps)
+        {
+            #region NHibernate code
+            Log.DebugFormat("Executing batch");
+            CheckReaders();
+            Prepare(_currentBatch.BatchCommand);
+            if (Factory.Settings.SqlStatementLogger.IsDebugEnabled)
+            {
+                Factory.Settings.SqlStatementLogger.LogBatchCommand(_currentBatchCommandsLog.ToString());
+                _currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
+            }
+
+            int rowsAffected;
+            try
+            {
+                rowsAffected = _currentBatch.ExecuteNonQuery();
+            }
+            catch (DbException e)
+            {
+                throw ADOExceptionHelper.Convert(Factory.SQLExceptionConverter, e, "could not execute batch command.");
+            }
+
+            Expectations.VerifyOutcomeBatched(_totalExpectedRowsAffected, rowsAffected);
+
+            _currentBatch.Dispose();
+            _totalExpectedRowsAffected = 0;
+            _currentBatch = CreateConfiguredBatch();
+            #endregion
         }
 
         /// <summary>
@@ -89,6 +133,7 @@ namespace NHibernate.SqlAzure
             {
                 var sessionConnection = (ReliableSqlDbConnection)_connectionManager.GetConnection();
 
+                #region NHibernate code
                 if (cmd.Connection != null)
                 {
                     // make sure the commands connection is the same as the Sessions connection
@@ -105,62 +150,20 @@ namespace NHibernate.SqlAzure
 
                 _connectionManager.Transaction.Enlist(cmd);
                 Driver.PrepareCommand(cmd);
+                #endregion
             }
             catch (InvalidOperationException ioe)
             {
+                #region NHibernate code
                 throw new ADOException("While preparing " + cmd.CommandText + " an error occurred", ioe);
+                #endregion
             }
         }
 
         protected override void DoExecuteBatch(IDbCommand ps)
         {
-            Log.DebugFormat("Executing batch");
-            CheckReaders();
-            Prepare(_currentBatch.BatchCommand);
-            if (Factory.Settings.SqlStatementLogger.IsDebugEnabled)
-            {
-                Factory.Settings.SqlStatementLogger.LogBatchCommand(_currentBatchCommandsLog.ToString());
-                _currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
-            }
-
-            int rowsAffected = 0;
-            try
-            {
-                var connection = (ReliableSqlDbConnection) _connectionManager.GetConnection();
-                var retryPolicy = connection.ReliableConnection.CommandRetryPolicy;
-                retryPolicy.ExecuteAction(() => rowsAffected = _currentBatch.ExecuteNonQuery());
-            }
-            catch (DbException e)
-            {
-                throw ADOExceptionHelper.Convert(Factory.SQLExceptionConverter, e, "could not execute batch command.");
-            }
-
-            Expectations.VerifyOutcomeBatched(_totalExpectedRowsAffected, rowsAffected);
-
-            _currentBatch.Dispose();
-            _totalExpectedRowsAffected = 0;
-            _currentBatch = CreateConfiguredBatch();
-        }
-
-        private SqlAzureClientSqlCommandSet CreateConfiguredBatch()
-        {
-            var result = new SqlAzureClientSqlCommandSet();
-            if (_defaultTimeout > 0)
-            {
-                try
-                {
-                    result.CommandTimeout = _defaultTimeout;
-                }
-                catch (Exception e)
-                {
-                    if (Log.IsWarnEnabled)
-                    {
-                        Log.Warn(e.ToString());
-                    }
-                }
-            }
-
-            return result;
+            var connection = (ReliableSqlDbConnection)_connectionManager.GetConnection();
+            RetryingAdoTransaction.ExecuteWithRetry(connection, () => ExecuteBatch(ps));
         }
     }
 }
