@@ -29,7 +29,7 @@ namespace NHibernate.SqlAzure.Tests.Config
         {
             return (sender, args) =>
             {
-                var msg = String.Format("SQLAzureClientDriver Retry - Count:{0}, Delay:{1}, Exception:{2}", args.CurrentRetryCount, args.Delay, args.LastException);
+                var msg = String.Format("SQLAzureClientDriver Retry - Count:{0}, Delay:{1}, Exception:{2}\r\n\r\n", args.CurrentRetryCount, args.Delay, args.LastException);
                 Console.WriteLine(msg);
             };
         }
