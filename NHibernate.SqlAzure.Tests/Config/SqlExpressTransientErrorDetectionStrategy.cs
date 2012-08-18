@@ -9,6 +9,9 @@ namespace NHibernate.SqlAzure.Tests.Config
     {
         public bool IsTransient(Exception ex)
         {
+            if (ex is TransactionException)
+                ex = ex.InnerException;
+
             // Is the error an error 17142 - the service is paused?
             var sqlException = ex as SqlException;
             return sqlException != null

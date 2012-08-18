@@ -77,6 +77,9 @@
     <Compile Include="ReliableSqlDbConnection.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="RetryingAdoTransaction.cs" />
+    <Compile Include="RetryingAdoNetTransactionFactory.cs" />
+    <Compile Include="RetryingAdoNetWithDistributedTransactionFactory.cs" />
     <Compile Include="SqlAzureClientBatchingBatcher.cs" />
     <Compile Include="SqlAzureClientBatchingBatcherFactory.cs" />
     <Compile Include="SqlAzureCommand.cs" />
