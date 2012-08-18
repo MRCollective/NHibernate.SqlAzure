@@ -123,10 +123,12 @@ namespace NHibernate.SqlAzure
                 _currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
             }
 
-            int rowsAffected;
+            int rowsAffected = 0;
             try
             {
-                rowsAffected = _currentBatch.ExecuteNonQuery();
+                var connection = (ReliableSqlDbConnection) _connectionManager.GetConnection();
+                var retryPolicy = connection.ReliableConnection.CommandRetryPolicy;
+                retryPolicy.ExecuteAction(() => rowsAffected = _currentBatch.ExecuteNonQuery());
             }
             catch (DbException e)
             {
