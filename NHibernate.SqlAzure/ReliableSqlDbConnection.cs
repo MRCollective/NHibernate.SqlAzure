@@ -6,29 +6,45 @@ using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.
 namespace NHibernate.SqlAzure
 {
     /// <summary>
-    /// Wrap ReliableSqlConnection in a class that extends <see cref="DbConnection"/>
+    /// Wrap <see cref="ReliableSqlConnection"/> in a class that extends <see cref="DbConnection"/>
     /// so internal type casts within NHibernate don't fail.
     /// </summary>
     public class ReliableSqlDbConnection : DbConnection
     {
+        /// <summary>
+        /// The underlying <see cref="ReliableSqlConnection"/>.
+        /// </summary>
         public ReliableSqlConnection ReliableConnection { get; set; }
 
+        /// <summary>
+        /// Constructs a <see cref="ReliableSqlDbConnection"/> to wrap around the given <see cref="ReliableSqlConnection"/>.
+        /// </summary>
+        /// <param name="connection">The <see cref="ReliableSqlConnection"/> to wrap</param>
         public ReliableSqlDbConnection(ReliableSqlConnection connection)
         {
             ReliableConnection = connection;
         }
 
+        /// <summary>
+        /// Explicit type-casting between <see cref="ReliableSqlDbConnection"/> and <see cref="ReliableSqlConnection"/>.
+        /// </summary>
+        /// <param name="connection">The <see cref="ReliableSqlDbConnection"/> being casted</param>
+        /// <returns>The underlying <see cref="ReliableSqlConnection"/></returns>
         public static explicit operator SqlConnection(ReliableSqlDbConnection connection)
         {
             return connection.ReliableConnection.Current;
         }
 
+        /// <summary>
+        /// Disposes the underling <see cref="ReliableSqlConnection"/> as well as the current class.
+        /// </summary>
         public new void Dispose()
         {
             ReliableConnection.Dispose();
             base.Dispose();
         }
 
+        #region Wrapping code
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
             return (DbTransaction) ReliableConnection.BeginTransaction(isolationLevel);
@@ -60,5 +76,6 @@ namespace NHibernate.SqlAzure
         public override string DataSource { get { return ""; } } 
         public override string ServerVersion { get { return ""; } }
         public override ConnectionState State { get { return ReliableConnection.State; } }
+        #endregion
     }
 }
