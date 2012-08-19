@@ -79,7 +79,7 @@ namespace NHibernate.SqlAzure
                 Log.Debug("Adding to batch:" + lineWithParameters);
             }
             #endregion
-            _currentBatch.Append((System.Data.SqlClient.SqlCommand)(SqlAzureCommand)batchUpdate);
+            _currentBatch.Append((System.Data.SqlClient.SqlCommand)(ReliableSqlCommand)batchUpdate);
             #region NHibernate code
             if (_currentBatch.CountOfCommands >= _batchSize)
             {

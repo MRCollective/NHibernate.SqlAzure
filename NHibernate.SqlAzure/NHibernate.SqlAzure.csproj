@@ -82,7 +82,7 @@
     <Compile Include="RetryingAdoNetWithDistributedTransactionFactory.cs" />
     <Compile Include="SqlAzureClientBatchingBatcher.cs" />
     <Compile Include="SqlAzureClientBatchingBatcherFactory.cs" />
-    <Compile Include="SqlAzureCommand.cs" />
+    <Compile Include="ReliableSqlCommand.cs" />
     <Compile Include="SqlAzureClientDriver.cs" />
   </ItemGroup>
   <ItemGroup>

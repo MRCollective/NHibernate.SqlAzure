@@ -44,7 +44,7 @@ namespace NHibernate.SqlAzure
         /// </value>
         public override IDbCommand CreateCommand()
         {
-            return new SqlAzureCommand();
+            return new ReliableSqlCommand();
         }
 
         /// <summary>

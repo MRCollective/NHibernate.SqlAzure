@@ -4,20 +4,57 @@ using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.
 
 namespace NHibernate.SqlAzure
 {
-    public class SqlAzureCommand : IDbCommand
+    /// <summary>
+    /// An <see cref="IDbCommand"/> implementation that wraps a <see cref="SqlCommand"/> object such that any
+    /// queries that are executed are executed via a <see cref="ReliableSqlConnection"/>.
+    /// </summary>
+    /// <remarks>
+    /// Note: For this to work it requires that the Connection property be set with a <see cref="ReliableSqlConnection"/> object.
+    /// </remarks>
+    public class ReliableSqlCommand : IDbCommand
     {
+        /// <summary>
+        /// The underlying <see cref="SqlCommand"/> being proxied.
+        /// </summary>
         public System.Data.SqlClient.SqlCommand Current { get; private set; }
 
-        public SqlAzureCommand()
+        /// <summary>
+        /// The <see cref="ReliableSqlConnection"/> that has been assigned to the command via the Connection property.
+        /// </summary>
+        public ReliableSqlConnection ReliableConnection { get; set; }
+
+        /// <summary>
+        /// Constructs a <see cref="ReliableSqlCommand"/>.
+        /// </summary>
+        public ReliableSqlCommand()
         {
             Current = new System.Data.SqlClient.SqlCommand();
         }
 
-        public static explicit operator System.Data.SqlClient.SqlCommand(SqlAzureCommand command)
+        /// <summary>
+        /// Explicit type-casting between a <see cref="ReliableSqlCommand"/> and a <see cref="SqlCommand"/>.
+        /// </summary>
+        /// <param name="command">The <see cref="ReliableSqlCommand"/> being casted</param>
+        /// <returns>The underlying <see cref="SqlCommand"/> being proxied.</returns>
+        public static explicit operator System.Data.SqlClient.SqlCommand(ReliableSqlCommand command)
         {
             return command.Current;
         }
 
+        /// <summary>
+        /// Returns the underlying <see cref="SqlConnection"/> and expects a <see cref="ReliableSqlConnection"/> when being set.
+        /// </summary>
+        public IDbConnection Connection
+        {
+            get { return Current.Connection; }
+            set
+            {
+                ReliableConnection = ((ReliableSqlDbConnection)value).ReliableConnection;
+                Current.Connection = ReliableConnection.Current;
+            }
+        }
+
+        #region Wrapping code
         public void Dispose()
         {
             Current.Dispose();
@@ -57,19 +94,7 @@ namespace NHibernate.SqlAzure
         {
             return ReliableConnection.ExecuteCommand<int>(Current);
         }
-
-        public IDbConnection Connection
-        {
-            get { return Current.Connection; }
-            set
-            {
-                ReliableConnection = ((ReliableSqlDbConnection)value).ReliableConnection;
-                Current.Connection = ReliableConnection.Current;
-            }
-        }
-
-        public ReliableSqlConnection ReliableConnection { get; set; }
-
+        
         public IDbTransaction Transaction
         {
             get { return Current.Transaction; }
@@ -104,5 +129,6 @@ namespace NHibernate.SqlAzure
             get { return Current.UpdatedRowSource; }
             set { Current.UpdatedRowSource = value; }
         }
+        #endregion
     }
 }
