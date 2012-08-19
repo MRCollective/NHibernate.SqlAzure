@@ -12,6 +12,7 @@ To use the provider:
 
 1. `Update-Package FluentNHibernate`
 2. `Install-Package NHibernate.SqlAzure`
+	* or if you want the version that isn't IL-merged with the Microsoft Transient Fault Handling library then `Install-Package NHibernate.SqlAzure.Standalone`
 3. Set the `Database` to use `SqlAzureClientDriver` as the client driver, e.g.:
 
         Fluently.Configure()
@@ -24,6 +25,7 @@ To use the provider:
 
 1. `Update-Package NHibernate`
 2. `Install-Package NHibernate.SqlAzure`
+	* or if you want the version that isn't IL-merged with the Microsoft Transient Fault Handling library then `Install-Package NHibernate.SqlAzure.Standalone`
 3. Set the `connection.driver_class` property on the session factory configuration to `NHibernate.SqlAzure.SqlAzureClientDriver, NHibernate.SqlAzure`.
 
 Reliable transactions
