@@ -38,7 +38,7 @@ namespace NHibernate.SqlAzure.Tests.Config
                 .ExposeConfiguration(c => c.SetProperty(Environment.UseQueryCache, "false"))
                 .ExposeConfiguration(c => c.SetProperty(Environment.UseSecondLevelCache, "false"));
 
-            if (typeof(SqlAzureClientDriver).IsAssignableFrom(typeof(T)))
+            if (typeof(LocalTestingReliableSql2008ClientDriver).IsAssignableFrom(typeof(T)))
                 config.ExposeConfiguration(c => c.SetProperty(Environment.TransactionStrategy,
                     typeof(ReliableAdoNetWithDistributedTransactionFactory).AssemblyQualifiedName));
 
