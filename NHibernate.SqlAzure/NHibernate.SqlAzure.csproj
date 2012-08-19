@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReliableSql2008ClientDriver.cs" />
     <Compile Include="ReliableSqlDbConnection.cs">
       <SubType>Component</SubType>
     </Compile>
