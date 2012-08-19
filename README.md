@@ -5,6 +5,8 @@ Provides an NHibernate driver that uses the Microsoft Transient Fault Handling l
 
 This library is build against the latest version of NHibernate (3.3.1.4000) so you will need to update to that version to use this library.
 
+This library is currently in a Beta release while it's tested against a number of production websites running in Azure. Feel free to use it and to raise any problems you find as Issues.
+
 Using the provider when using Fluent NHibernate
 -----------------------------------------------
 
