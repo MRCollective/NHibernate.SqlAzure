@@ -95,6 +95,7 @@
     <Compile Include="SqlAzureClientDriver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NHibernate.SqlAzure.nuspec" />
     <None Include="packages.config" />
     <None Include="robdmoore.snk" />
   </ItemGroup>
