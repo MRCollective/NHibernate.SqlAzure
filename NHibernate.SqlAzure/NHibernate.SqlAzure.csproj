@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\NHibernate.SqlAzure.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -95,6 +96,7 @@
     <Compile Include="SqlAzureClientDriver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NHibernate.SqlAzure.Standalone.nuspec" />
     <None Include="NHibernate.SqlAzure.nuspec" />
     <None Include="packages.config" />
     <None Include="robdmoore.snk" />
