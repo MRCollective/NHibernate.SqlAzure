@@ -4,7 +4,7 @@ using Microsoft.Practices.TransientFaultHandling;
 
 namespace NHibernate.SqlAzure.Tests.Config
 {
-    public class LocalTestingSqlAzureClientDriver : ReliableSql2008ClientDriver
+    public class LocalTestingReliableSql2008ClientDriver : ReliableSql2008ClientDriver
     {
         public static int CommandError { get; set; }
         public static int ConnectionError { get; set; }

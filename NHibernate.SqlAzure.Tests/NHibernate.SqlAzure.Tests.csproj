@@ -104,7 +104,7 @@
     <Compile Include="Config\FluentRunner.cs" />
     <Compile Include="Config\NHibernateConfiguration.cs" />
     <Compile Include="Config\NHibernateTestBase.cs" />
-    <Compile Include="Config\LocalTestingSqlAzureClientDriver.cs" />
+    <Compile Include="Config\LocalTestingReliableSql2008ClientDriver.cs" />
     <Compile Include="Config\SqlExpressTransientErrorDetectionStrategy.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserProperty.cs" />

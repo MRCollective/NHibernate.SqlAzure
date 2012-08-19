@@ -14,10 +14,10 @@ namespace NHibernate.SqlAzure.Tests
 {
     // Run the tests against the standard Sql2008Client driver as well as the SqlAzureClientDriver
     // That way, we know if the test is broken because of the SqlAzureClientDriver or the test is wrong
-    // Also, test the retry logic actually fires by using the LocalTestingSqlAzureClientDriver that provides
+    // Also, test the retry logic actually fires by using the LocalTestingReliableSql2008ClientDriver that provides
     //  a reliable connection with a local error specific transient error detection strategy
     [TestFixture]
-    class LocalTestingSqlAzureClientDriverShould : SqlClientDriverShould<LocalTestingSqlAzureClientDriver>
+    class LocalTestingSqlAzureClientDriverShould : SqlClientDriverShould<LocalTestingReliableSql2008ClientDriver>
     {
         [Test]
         public void Execute_non_batching_commands_during_temporary_shutdown_of_sql_server()
