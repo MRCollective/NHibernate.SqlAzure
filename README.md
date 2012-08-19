@@ -3,13 +3,16 @@
 
 Provides an NHibernate driver that uses the Microsoft Transient Fault Handling library to allow for reliable SQL Azure connections.
 
+This library is build against the latest version of NHibernate (3.3.1.4000) so you will need to update to that version to use this library.
+
 Using the provider when using Fluent NHibernate
 -----------------------------------------------
 
 To use the provider:
 
-1. `Install-Package NHibernate.SqlAzure`
-2. Set the `Database` to use `SqlAzureClientDriver` as the client driver, e.g.:
+1. `Update-Package FluentNHibernate`
+2. `Install-Package NHibernate.SqlAzure`
+3. Set the `Database` to use `SqlAzureClientDriver` as the client driver, e.g.:
 
         Fluently.Configure()
             .Database(MsSqlConfiguration.MsSql2008.ConnectionString(connectionString).Driver<SqlAzureClientDriver>())
@@ -19,8 +22,9 @@ Using the provider when using an XML configuration
 
 To use the provider:
 
-1. `Install-Package NHibernate.SqlAzure`
-2. Set the `connection.driver_class` property on the session factory configuration to `NHibernate.SqlAzure.SqlAzureClientDriver, NHibernate.SqlAzure`.
+1. `Update-Package NHibernate`
+2. `Install-Package NHibernate.SqlAzure`
+3. Set the `connection.driver_class` property on the session factory configuration to `NHibernate.SqlAzure.SqlAzureClientDriver, NHibernate.SqlAzure`.
 
 Reliable transactions
 ---------------------
