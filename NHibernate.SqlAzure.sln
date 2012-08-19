@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
 		README.md = README.md
+		logo.png = logo.png
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.SqlAzure.Tests", "NHibernate.SqlAzure.Tests\NHibernate.SqlAzure.Tests.csproj", "{887FD0A4-B8E0-4B3D-BF7E-4CC7090EB829}"
