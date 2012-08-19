@@ -169,7 +169,7 @@ namespace NHibernate.SqlAzure
         protected override void DoExecuteBatch(IDbCommand ps)
         {
             var connection = (ReliableSqlDbConnection)_connectionManager.GetConnection();
-            RetryingAdoTransaction.ExecuteWithRetry(connection, () => ExecuteBatch(ps));
+            ReliableAdoTransaction.ExecuteWithRetry(connection, () => ExecuteBatch(ps));
         }
     }
 }

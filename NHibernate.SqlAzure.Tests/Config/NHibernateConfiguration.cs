@@ -40,7 +40,7 @@ namespace NHibernate.SqlAzure.Tests.Config
 
             if (typeof(SqlAzureClientDriver).IsAssignableFrom(typeof(T)))
                 config.ExposeConfiguration(c => c.SetProperty(Environment.TransactionStrategy,
-                    typeof(RetryingAdoNetWithDistributedTransactionFactory).AssemblyQualifiedName));
+                    typeof(ReliableAdoNetWithDistributedTransactionFactory).AssemblyQualifiedName));
 
 
             return config.BuildSessionFactory();

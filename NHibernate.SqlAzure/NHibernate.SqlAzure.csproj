@@ -77,9 +77,9 @@
     <Compile Include="ReliableSqlDbConnection.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="RetryingAdoTransaction.cs" />
-    <Compile Include="RetryingAdoNetTransactionFactory.cs" />
-    <Compile Include="RetryingAdoNetWithDistributedTransactionFactory.cs" />
+    <Compile Include="ReliableAdoTransaction.cs" />
+    <Compile Include="ReliableAdoNetTransactionFactory.cs" />
+    <Compile Include="ReliableAdoNetWithDistributedTransactionFactory.cs" />
     <Compile Include="ReliableSqlClientBatchingBatcher.cs" />
     <Compile Include="ReliableSqlClientBatchingBatcherFactory.cs" />
     <Compile Include="ReliableSqlCommand.cs" />
