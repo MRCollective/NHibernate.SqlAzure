@@ -11,7 +11,11 @@ using NHibernate.Exceptions;
 
 namespace NHibernate.SqlAzure
 {
-    public class SqlAzureClientBatchingBatcher : SqlClientBatchingBatcher
+    /// <summary>
+    /// Exposes <see cref="SqlClientBatchingBatcher"/> functionality when a <see cref="ReliableSqlDbConnection"/>
+    /// connection is being used.
+    /// </summary>
+    public class ReliableSqlClientBatchingBatcher : SqlClientBatchingBatcher
     {
         #region Impersonate private fields in base class
         private readonly ConnectionManager _connectionManager;
@@ -24,6 +28,7 @@ namespace NHibernate.SqlAzure
         private readonly MethodInfo _createConfiguredBatchMethod = typeof (SqlClientBatchingBatcher)
             .GetMethod("CreateConfiguredBatch", BindingFlags.Instance | BindingFlags.NonPublic);
 
+        // ReSharper disable InconsistentNaming
         private int _totalExpectedRowsAffected
         {
             get { return (int)_totalExpectedRowsAffectedField.GetValue(this); }
@@ -43,13 +48,14 @@ namespace NHibernate.SqlAzure
         {
             get { return BatchSize; }
         }
+        // ReSharper restore InconsistentNaming
 
         private SqlClientSqlCommandSet CreateConfiguredBatch()
         {
             return (SqlClientSqlCommandSet)_createConfiguredBatchMethod.Invoke(this, null);
         }
         
-        public SqlAzureClientBatchingBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
+        public ReliableSqlClientBatchingBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
             : base(connectionManager, interceptor)
         {
             _connectionManager = connectionManager;

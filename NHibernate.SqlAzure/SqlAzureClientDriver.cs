@@ -52,7 +52,7 @@ namespace NHibernate.SqlAzure
         /// </summary>
         public System.Type BatcherFactoryClass
         {
-            get { return typeof(SqlAzureClientBatchingBatcherFactory); }
+            get { return typeof(ReliableSqlClientBatchingBatcherFactory); }
         }
     }
 }
