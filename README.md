@@ -48,7 +48,14 @@ Using reliable transactions when using an XML configuration
 
 Set the `transaction.factory_class` property on the session factory configuration to `NHibernate.SqlAzure.ReliableAdoNetWithDistributedTransactionFactory, NHibernate.SqlAzure`.
 
-Extending the provider or adding logging for failed attempts or applying different retry strategies / transient error detection strategies
+Adding logging for failed and retried attempts
+-----------------------------------------------------------
+
+Extend the `SqlAzureClientDriver` class and override the `RetryEventHandler` method.
+
+This method can be used to provide an event handler delegate which is automatically called on a connection or command retry.
+
+Extending the provider, adding more complex logging for failed attempts or applying different retry strategies / transient error detection strategies
 ------------------------------------------------------------------------------------------------------------------------------------------
 
 Follow the pattern that the `LocalTestingSqlAzureClientDriver` class uses to extend the `ReliableSql2008ClientDriver` class and provide a different `ReliableSqlConnection` instance with the configuration you want.

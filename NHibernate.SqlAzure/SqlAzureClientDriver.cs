@@ -23,7 +23,19 @@ namespace NHibernate.SqlAzure
 
             var retryManager = new RetryManagerImpl(retryStrategies, interval, backoff, incremental, interval, interval, interval);
 
-            return new ReliableSqlConnection(null, retryManager.GetDefaultSqlConnectionRetryPolicy(), retryManager.GetDefaultSqlCommandRetryPolicy());
+            var connection = new ReliableSqlConnection(null, retryManager.GetDefaultSqlConnectionRetryPolicy(), retryManager.GetDefaultSqlCommandRetryPolicy());
+            connection.ConnectionRetryPolicy.Retrying += RetryEventHandler();
+            connection.CommandRetryPolicy.Retrying += RetryEventHandler();
+            return connection;
+        }
+
+        /// <summary>
+        /// An event handler delegate which will be called on connection and command retries.
+        /// </summary>
+        /// <returns>A custom method for handling the retry events</returns>
+        protected virtual EventHandler<RetryingEventArgs> RetryEventHandler()
+        {
+            return null;
         }
     }
 }
