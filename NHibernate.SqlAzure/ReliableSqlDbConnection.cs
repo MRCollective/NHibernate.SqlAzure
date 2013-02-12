@@ -54,6 +54,18 @@ namespace NHibernate.SqlAzure
         {
             ReliableConnection.Close();
         }
+		
+        public override DataTable GetSchema() {
+            return ReliableConnection.Current.GetSchema();
+        }
+
+        public override DataTable GetSchema(string collectionName) {
+            return ReliableConnection.Current.GetSchema(collectionName);
+        }
+
+		public override DataTable GetSchema(string collectionName, string[] restrictionValues) {
+			return ReliableConnection.Current.GetSchema(collectionName, restrictionValues);
+		}
 
         public override void ChangeDatabase(string databaseName)
         {
