@@ -86,12 +86,14 @@ namespace NHibernate.SqlAzure.Tests
                     }
                 }
             }
-            catch(GenericADOException)
+            catch(GenericADOException e)
             {
+                Console.WriteLine(e);
                 throw new ExpectedErrorException();
             }
-            catch(TransactionException)
+            catch(TransactionException e)
             {
+                Console.WriteLine(e);
                 throw new ExpectedErrorException();
             }
         }
