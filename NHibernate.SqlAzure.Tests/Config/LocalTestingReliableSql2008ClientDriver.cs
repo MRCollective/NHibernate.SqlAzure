@@ -18,17 +18,17 @@ namespace NHibernate.SqlAzure.Tests.Config
                 new RetryPolicy<SqlExpressTransientErrorDetectionStrategy>(retryStrategy)
             );
 
-            connection.CommandRetryPolicy.Retrying += LogRetry();
-            connection.ConnectionRetryPolicy.Retrying += LogRetry();
+            connection.CommandRetryPolicy.Retrying += LogRetry("Command");
+            connection.ConnectionRetryPolicy.Retrying += LogRetry("Connection");
 
             return connection;
         }
 
-        private static EventHandler<RetryingEventArgs> LogRetry()
+        private static EventHandler<RetryingEventArgs> LogRetry(string type)
         {
             return (sender, args) =>
             {
-                var msg = String.Format("SQLAzureClientDriver Retry - Count:{0}, Delay:{1}, Exception:{2}\r\n\r\n", args.CurrentRetryCount, args.Delay, args.LastException);
+                var msg = String.Format("SQLAzureClientDriver {3} Retry - Count:{0}, Delay:{1}, Exception:{2}\r\n\r\n", args.CurrentRetryCount, args.Delay, args.LastException, type);
                 Console.WriteLine(msg);
             };
         }
