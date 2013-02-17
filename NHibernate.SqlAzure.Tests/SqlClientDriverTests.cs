@@ -105,12 +105,12 @@ namespace NHibernate.SqlAzure.Tests
         }
     }
 
-    abstract class SqlClientDriverShould<T> : NHibernateTestBase<T> where T : SqlClientDriver
+    abstract class SqlClientDriverShould<T> : PooledNHibernateTestBase<T> where T : SqlClientDriver
     {
         [Test]
         public void Perform_empty_select()
         {
-            var user = Session.Get<User>(-1);
+            var user = CreateSession().Get<User>(-1);
 
             Assert.That(user, Is.Null);
         }
@@ -122,7 +122,8 @@ namespace NHibernate.SqlAzure.Tests
             var session = CreateSession();
             session.Save(user);
 
-            var dbUser = Session.Get<User>(user.Id);
+            var session2 = CreateSession();
+            var dbUser = session2.Get<User>(user.Id);
 
             Assert.That(dbUser.Name, Is.EqualTo(user.Name));
         }
@@ -130,19 +131,20 @@ namespace NHibernate.SqlAzure.Tests
         [Test]
         public void Insert_and_select_multiple_entities()
         {
+            var session = CreateSession();
             var users = Builder<User>.CreateListOfSize(100)
                 .All().With(u => u.Properties = new List<UserProperty>
                 {
                     new UserProperty {Name = "Name", Value = "Value", User = u}
                 })
                 .Build().OrderBy(u => u.Name).ToList();
-            using (var t = Session.BeginTransaction())
+            using (var t = session.BeginTransaction())
             {
-                users.ForEach(u => Session.Save(u));
+                users.ForEach(u => session.Save(u));
                 t.Commit();
             }
 
-            var dbUsers = Session.QueryOver<User>()
+            var dbUsers = session.QueryOver<User>()
                 .WhereRestrictionOn(u => u.Id).IsIn(users.Select(u => u.Id).ToArray())
                 .OrderBy(u => u.Name).Asc
                 .List();
