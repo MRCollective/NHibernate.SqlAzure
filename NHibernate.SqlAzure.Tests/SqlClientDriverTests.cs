@@ -43,12 +43,6 @@ namespace NHibernate.SqlAzure.Tests
                 }
             }
         }
-
-        [Test]
-        public void Establish_connection_during_temporary_shutdown_of_sql_server()
-        {
-            // todo
-        }
     }
 
     [TestFixture]
@@ -98,12 +92,6 @@ namespace NHibernate.SqlAzure.Tests
             }
         }
         public class ExpectedErrorException : Exception {}
-
-        [Test]
-        public void Fail_to_establish_connection_during_temporary_shutdown_of_sql_server()
-        {
-            // todo
-        }
     }
 
     abstract class SqlClientDriverShould<T> : PooledNHibernateTestBase<T> where T : SqlClientDriver

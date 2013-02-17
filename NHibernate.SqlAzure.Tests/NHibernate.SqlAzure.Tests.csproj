@@ -109,6 +109,7 @@
     <Compile Include="Config\NHibernateTestBase.cs" />
     <Compile Include="Config\LocalTestingReliableSql2008ClientDriver.cs" />
     <Compile Include="Config\SqlExpressTransientErrorDetectionStrategy.cs" />
+    <Compile Include="ConnectionTests.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserProperty.cs" />
     <Compile Include="Migrations\20120801141148_CreateUserTable.cs" />
