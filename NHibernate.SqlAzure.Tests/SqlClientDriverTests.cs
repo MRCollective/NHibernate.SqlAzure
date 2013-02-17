@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceProcess;
 using System.Threading;
 using FizzWare.NBuilder;
 using NHibernate.Driver;
@@ -179,69 +178,5 @@ namespace NHibernate.SqlAzure.Tests
         {
             // todo
         }
-
-        #region SQLExpress shutdown code
-        private readonly ServiceController _serviceController = new ServiceController { MachineName = Environment.MachineName, ServiceName = "MSSQL$SQLEXPRESS" };
-
-        [TearDown]
-        public void TearDown()
-        {
-            // Make sure that the service is running before stopping the test
-            _serviceController.Refresh();
-            if (_serviceController.Status == ServiceControllerStatus.PausePending)
-                _serviceController.WaitForStatus(ServiceControllerStatus.Paused);
-            if (_serviceController.Status == ServiceControllerStatus.ContinuePending)
-                _serviceController.WaitForStatus(ServiceControllerStatus.Running);
-
-            if (_serviceController.Status != ServiceControllerStatus.Running)
-            {
-                Console.WriteLine("SQLExpress service currently at {0} state; restarting...", _serviceController.Status);
-                _serviceController.Continue();
-                _serviceController.WaitForStatus(ServiceControllerStatus.Running);
-            }
-
-            base.Setup();
-        }
-
-        protected ThreadKiller TemporarilyShutdownSqlServerExpress()
-        {
-            var t = new Thread(MakeSqlTransient);
-            t.Start();
-            return new ThreadKiller(t);
-        }
-
-        private void MakeSqlTransient()
-        {
-            while (true)
-            {
-                _serviceController.Refresh();
-                if (_serviceController.Status == ServiceControllerStatus.Running)
-                    _serviceController.Pause();
-                _serviceController.WaitForStatus(ServiceControllerStatus.Paused);
-
-                _serviceController.Refresh();
-                _serviceController.Continue();
-                _serviceController.WaitForStatus(ServiceControllerStatus.Running);
-
-                Thread.Sleep(20);
-            }
-        }
-
-        protected class ThreadKiller : IDisposable
-        {
-            private readonly Thread _threadToWaitFor;
-
-            public ThreadKiller(Thread threadToWaitFor)
-            {
-                _threadToWaitFor = threadToWaitFor;
-            }
-
-            public void Dispose()
-            {
-                Console.WriteLine("Killing thread: {0}", DateTime.Now.ToString("ss.f"));
-                _threadToWaitFor.Abort();
-            }
-        }
-        #endregion
     }
 }
