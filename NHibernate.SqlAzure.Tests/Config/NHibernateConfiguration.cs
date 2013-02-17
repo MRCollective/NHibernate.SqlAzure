@@ -6,6 +6,7 @@ using HibernatingRhinos.Profiler.Appender.NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Driver;
 using NHibernate.SqlAzure.Tests.Entities;
+using NHibernate.Tool.hbm2ddl;
 
 namespace NHibernate.SqlAzure.Tests.Config
 {
@@ -42,6 +43,10 @@ namespace NHibernate.SqlAzure.Tests.Config
                 config.ExposeConfiguration(c => c.SetProperty(Environment.TransactionStrategy,
                     typeof(ReliableAdoNetWithDistributedTransactionFactory).AssemblyQualifiedName));
 
+            var nhConfig = config.BuildConfiguration();
+            SchemaMetadataUpdater.QuoteTableAndColumns(nhConfig);
+            var validator = new SchemaValidator(nhConfig);
+            validator.Validate();
 
             return config.BuildSessionFactory();
         }
