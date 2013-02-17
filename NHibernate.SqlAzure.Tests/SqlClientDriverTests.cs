@@ -184,13 +184,50 @@ namespace NHibernate.SqlAzure.Tests
         [Test]
         public void Insert_and_update_an_entity()
         {
-            // todo
+            using (var session = CreateSession())
+            using (var session2 = CreateSession())
+            {
+                var user = new User {Name = "Name1"};
+                session.Save(user);
+                session.Flush();
+                user.Name = "Name2";
+                session.Flush();
+
+                var userFromDb = session2.Get<User>(user.Id);
+
+                Assert.That(userFromDb.Name, Is.EqualTo("Name2"));
+            }
         }
 
         [Test]
         public void Insert_and_update_multiple_entities()
         {
-            // todo
+            using (var session = CreateSession())
+            using (var session2 = CreateSession())
+            {
+                var users = Builder<User>.CreateListOfSize(100).Build().ToList();
+                using (var t = session.BeginTransaction())
+                {
+                    users.ForEach(u => session.Save(u));
+                    t.Commit();
+                }
+                foreach (var u in users)
+                {
+                    u.Name += "_2_";
+                }
+                session.Flush();
+
+                var dbUsers = session2.QueryOver<User>()
+                    .WhereRestrictionOn(u => u.Id).IsIn(users.Select(u => u.Id).ToArray())
+                    .OrderBy(u => u.Name).Asc
+                    .List();
+
+                Assert.That(dbUsers, Has.Count.EqualTo(users.Count));
+                foreach (var u in dbUsers)
+                {
+                    Assert.That(u.Name, Is.StringEnding("_2_"));
+                }
+            }
         }
     }
 }
