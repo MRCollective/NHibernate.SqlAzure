@@ -99,62 +99,86 @@ namespace NHibernate.SqlAzure.Tests
         [Test]
         public void Perform_empty_select()
         {
-            var user = CreateSession().Get<User>(-1);
+            using (var session = CreateSession())
+            {
+                var user = session.Get<User>(-1);
 
-            Assert.That(user, Is.Null);
+                Assert.That(user, Is.Null);
+            }
         }
 
         [Test]
         public void Insert_and_select_entity()
         {
-            var user = new User { Name = "Name" };
-            var session = CreateSession();
-            session.Save(user);
+            using (var session = CreateSession())
+            using (var session2 = CreateSession())
+            {
+                var user = new User {Name = "Name"};
+                session.Save(user);
 
-            var session2 = CreateSession();
-            var dbUser = session2.Get<User>(user.Id);
+                var dbUser = session2.Get<User>(user.Id);
 
-            Assert.That(dbUser.Name, Is.EqualTo(user.Name));
+                Assert.That(dbUser.Name, Is.EqualTo(user.Name));
+            }
         }
 
         [Test]
         public void Insert_and_select_multiple_entities()
         {
-            var session = CreateSession();
-            var users = Builder<User>.CreateListOfSize(100)
+            using (var session = CreateSession())
+            using (var session2 = CreateSession())
+            {
+                var users = Builder<User>.CreateListOfSize(100)
                 .All().With(u => u.Properties = new List<UserProperty>
                 {
                     new UserProperty {Name = "Name", Value = "Value", User = u}
                 })
                 .Build().OrderBy(u => u.Name).ToList();
-            using (var t = session.BeginTransaction())
-            {
-                users.ForEach(u => session.Save(u));
-                t.Commit();
-            }
+                using (var t = session.BeginTransaction())
+                {
+                    users.ForEach(u => session.Save(u));
+                    t.Commit();
+                }
 
-            var dbUsers = session.QueryOver<User>()
-                .WhereRestrictionOn(u => u.Id).IsIn(users.Select(u => u.Id).ToArray())
-                .OrderBy(u => u.Name).Asc
-                .List();
+                var dbUsers = session2.QueryOver<User>()
+                    .WhereRestrictionOn(u => u.Id).IsIn(users.Select(u => u.Id).ToArray())
+                    .OrderBy(u => u.Name).Asc
+                    .List();
 
-            Assert.That(dbUsers, Has.Count.EqualTo(users.Count));
-            for (var i = 0; i < users.Count; i++)
-            {
-                Assert.That(dbUsers[i], Has.Property("Name").EqualTo(users[i].Name), "User " + i);
-                Assert.That(dbUsers[i], Has.Property("Id").EqualTo(users[i].Id), "User " + i);
-                var userProperties = dbUsers[i].Properties;
-                Assert.That(userProperties, Is.Not.Null, "User " + i + " Properties");
-                Assert.That(userProperties, Has.Count.EqualTo(1), "User " + i + " Properties");
-                Assert.That(userProperties[0], Has.Property("Name").EqualTo("Name"), "User " + i + " property 0");
-                Assert.That(userProperties[0], Has.Property("Value").EqualTo("Value"), "User " + i + " property 0");
+                Assert.That(dbUsers, Has.Count.EqualTo(users.Count));
+                for (var i = 0; i < users.Count; i++)
+                {
+                    Assert.That(dbUsers[i], Has.Property("Name").EqualTo(users[i].Name), "User " + i);
+                    Assert.That(dbUsers[i], Has.Property("Id").EqualTo(users[i].Id), "User " + i);
+                    var userProperties = dbUsers[i].Properties;
+                    Assert.That(userProperties, Is.Not.Null, "User " + i + " Properties");
+                    Assert.That(userProperties, Has.Count.EqualTo(1), "User " + i + " Properties");
+                    Assert.That(userProperties[0], Has.Property("Name").EqualTo("Name"), "User " + i + " property 0");
+                    Assert.That(userProperties[0], Has.Property("Value").EqualTo("Value"), "User " + i + " property 0");
+                }
             }
         }
 
         [Test]
         public void Select_a_scalar()
         {
-            // todo
+            using (var session = CreateSession())
+            using (var session2 = CreateSession())
+            {
+                var users = Builder<User>.CreateListOfSize(100).Build().ToList();
+                using (var t = session.BeginTransaction())
+                {
+                    users.ForEach(u => session.Save(u));
+                    t.Commit();
+                }
+
+                var count = session2.QueryOver<User>()
+                    .WhereRestrictionOn(x => x.Id)
+                        .IsIn(users.Select(x => x.Id).ToArray())
+                    .RowCount();
+
+                Assert.That(count, Is.EqualTo(100));
+            }
         }
 
         [Test]
