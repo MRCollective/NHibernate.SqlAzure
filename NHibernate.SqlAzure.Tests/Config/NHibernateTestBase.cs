@@ -83,18 +83,25 @@ namespace NHibernate.SqlAzure.Tests.Config
 
         private void MakeSqlTransient()
         {
-            while (true)
+            try
             {
-                _serviceController.Refresh();
-                if (_serviceController.Status == ServiceControllerStatus.Running)
-                    _serviceController.Pause();
-                _serviceController.WaitForStatus(ServiceControllerStatus.Paused);
+                while (true)
+                {
+                    _serviceController.Refresh();
+                    if (_serviceController.Status == ServiceControllerStatus.Running)
+                        _serviceController.Pause();
+                    _serviceController.WaitForStatus(ServiceControllerStatus.Paused);
 
-                _serviceController.Refresh();
-                _serviceController.Continue();
-                _serviceController.WaitForStatus(ServiceControllerStatus.Running);
+                    _serviceController.Refresh();
+                    _serviceController.Continue();
+                    _serviceController.WaitForStatus(ServiceControllerStatus.Running);
 
-                Thread.Sleep(20);
+                    Thread.Sleep(20);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while making SQL transient: {0}", e);
             }
         }
 
