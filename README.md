@@ -15,7 +15,7 @@ To use the provider:
 1. `Update-Package FluentNHibernate`
 2. `Install-Package NHibernate.SqlAzure`
 	* or if you want the version that isn't IL-merged with the Microsoft Transient Fault Handling library then `Install-Package NHibernate.SqlAzure.Standalone`
-3. Set the `Database` to use `SqlAzureClientDriver` as the client driver, e.g.:
+3. Set the `Database` to use `SqlAzureClientDriver` as the client driver (note: if you get Timeout exceptions then see the Advanced section below), e.g.:
 
         Fluently.Configure()
             .Database(MsSqlConfiguration.MsSql2008.ConnectionString(connectionString).Driver<SqlAzureClientDriver>())
@@ -48,17 +48,18 @@ Using reliable transactions when using an XML configuration
 
 Set the `transaction.factory_class` property on the session factory configuration to `NHibernate.SqlAzure.ReliableAdoNetWithDistributedTransactionFactory, NHibernate.SqlAzure`.
 
-Adding logging for failed and retried attempts
------------------------------------------------------------
+Advanced Usage: Extending the provider, add logging for failed attempts or apply different retry strategies / transient error detection strategies
+----------------------------------------------------------------------------------------------------------------------------------
 
-Extend the `SqlAzureClientDriver` class and override the `RetryEventHandler` method.
+There are two abstract base classes that you can extend to get more control over the retry policies:
 
-This method can be used to provide an event handler delegate which is automatically called on a connection or command retry.
-
-Extending the provider, adding more complex logging for failed attempts or applying different retry strategies / transient error detection strategies
-------------------------------------------------------------------------------------------------------------------------------------------
-
-Follow the pattern that the `LocalTestingSqlAzureClientDriver` class uses to extend the `ReliableSql2008ClientDriver` class and provide a different `ReliableSqlConnection` instance with the configuration you want.
+* `ReliableSql2008ClientDriver`: Takes care of wrapping the internals of NHibernate to use a `ReliableSqlConnection` rather than a `SqlConnection`. You simply need to override the `CreateReliableConnection` method and instantiate your own `ReliableSqlConnection` in any way you like
+* `DefaultReliableSql2008ClientDriver<TTransientErrorDetectionStrategy>`:
+	* Defines a connection and command retry policy (based on the example ones used in the [Transient Fault Handling documentation](http://msdn.microsoft.com/en-us/library/hh680900.aspx)
+	* Includes overridable methods to return event handlers for logging when any retries occur (`RetryEventHandler`) or alternatively logging when a specific type of retry occurs (`CommandRetryEventHandler` and `ConnectionRetryEventHandler`)
+	* Allows you to define what transient error detection strategy you want to use (`TTransientErrorDetectionStrategy`); there are two included in this library that you can use and / or extend (and of course you can always create a completely custom one by extending `ITransientErrorDetectionStrategy`; for an example check out `NHibernate.SqlAzure.Tests.Config.SqlExpressTransientErrorDetectionStrategy` in the test project of the source code):
+		* `NHibernate.SqlAzure.RetryStrategies.SqlAzureTransientErrorDetectionStrategy`: A clone of the error detection strategy that comes with the Transient Faut Handling library (except it's not sealed and the `IsTransient` method is virtual so you can extend it
+		* `NHibernate.SqlAzure.RetryStrategies.SqlAzureTransientErrorDetectionStrategyWithTimeouts`: The same as above with the addition of detecting timeout exceptions as a transient error; use this with caution as it's possible for Timeout exceptions to be both a [transient error caused by Azure and a legitimate timeout caused by unoptimised queries](http://social.msdn.microsoft.com/Forums/en-US/ssdsgetstarted/thread/7a50985d-92c2-472f-9464-a6591efec4b3/)
 
 Running the tests
 -----------------
