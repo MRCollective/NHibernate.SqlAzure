@@ -29,7 +29,6 @@ namespace NHibernate.SqlAzure.Tests.Config
     public abstract class NHibernateTestBase<T> where T: SqlClientDriver
     {
         private ISessionFactory _sessionFactory;
-        protected ISession Session;
         protected FluentRunner Migrator;
 
         protected abstract string ConnectionString { get; }
