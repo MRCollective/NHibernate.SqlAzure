@@ -102,6 +102,8 @@
     <Compile Include="ReliableSqlClientBatchingBatcher.cs" />
     <Compile Include="ReliableSqlClientBatchingBatcherFactory.cs" />
     <Compile Include="ReliableSqlCommand.cs" />
+    <Compile Include="RetryStrategies\SqlAzureTransientErrorDetectionStrategy.cs" />
+    <Compile Include="RetryStrategies\SqlAzureTransientErrorDetectionStrategyWithTimeouts.cs" />
     <Compile Include="SqlAzureClientDriver.cs" />
     <Compile Include="SqlAzureClientDriverWithTimeoutRetries.cs" />
   </ItemGroup>

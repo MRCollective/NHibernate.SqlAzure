@@ -20,9 +20,9 @@ namespace NHibernate.SqlAzure
             var commandRetry = new Incremental(incremental, 10, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
 
             var connection = new ReliableSqlConnection(null,
-                                                       new RetryPolicy<TTransientErrorDetectionStrategy>(connectionRetry),
-                                                       new RetryPolicy<TTransientErrorDetectionStrategy>(commandRetry)
-                );
+                new RetryPolicy<TTransientErrorDetectionStrategy>(connectionRetry),
+                new RetryPolicy<TTransientErrorDetectionStrategy>(commandRetry)
+            );
             connection.ConnectionRetryPolicy.Retrying += ConnectionRetryEventHandler();
             connection.CommandRetryPolicy.Retrying += CommandRetryEventHandler();
             return connection;
