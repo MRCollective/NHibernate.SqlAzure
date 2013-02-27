@@ -150,7 +150,7 @@ namespace NHibernate.SqlAzure.Tests
                 {
                     Assert.That(dbUsers[i], Has.Property("Name").EqualTo(users[i].Name), "User " + i);
                     Assert.That(dbUsers[i], Has.Property("Id").EqualTo(users[i].Id), "User " + i);
-                    var userProperties = dbUsers[i].Properties;
+                    var userProperties = dbUsers[i].Properties.ToList();
                     Assert.That(userProperties, Is.Not.Null, "User " + i + " Properties");
                     Assert.That(userProperties, Has.Count.EqualTo(1), "User " + i + " Properties");
                     Assert.That(userProperties[0], Has.Property("Name").EqualTo("Name"), "User " + i + " property 0");
