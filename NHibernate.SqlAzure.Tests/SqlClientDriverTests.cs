@@ -49,6 +49,9 @@ namespace NHibernate.SqlAzure.Tests
     class SqlAzureClientDriverShould : SqlClientDriverShould<SqlAzureClientDriver> {}
 
     [TestFixture]
+    class SqlAzureClientDriverWithTimeoutRetriesShould : SqlClientDriverShould<SqlAzureClientDriverWithTimeoutRetries> { }
+
+    [TestFixture]
     class Sql2008ClientDriverShould : SqlClientDriverShould<Sql2008ClientDriver>
     {
         [Test]

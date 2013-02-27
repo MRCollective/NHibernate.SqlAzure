@@ -90,6 +90,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultReliableSql2008ClientDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReliableSql2008ClientDriver.cs" />
     <Compile Include="ReliableSqlDbConnection.cs">
@@ -102,6 +103,7 @@
     <Compile Include="ReliableSqlClientBatchingBatcherFactory.cs" />
     <Compile Include="ReliableSqlCommand.cs" />
     <Compile Include="SqlAzureClientDriver.cs" />
+    <Compile Include="SqlAzureClientDriverWithTimeoutRetries.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NHibernate.SqlAzure.Standalone.nuspec" />
