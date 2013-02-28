@@ -11,24 +11,15 @@ namespace NHibernate.SqlAzure.RetryStrategies
     {
         public override bool IsTransient(Exception ex)
         {
-            if (base.IsTransient(ex))
-                return true;
-
-            if (this.IsOurTransient(ex))
-                return true;
-            
-            return false;
+            return base.IsTransient(ex) || IsTransientTimeout(ex);
         }
 
-        protected virtual bool IsOurTransient(Exception ex)
+        protected virtual bool IsTransientTimeout(Exception ex)
         {
             if (IsConnectionTimeout(ex))
                 return true;
 
-            if (ex.InnerException != null)
-                return IsOurTransient(ex.InnerException);
-           
-            return false;
+            return ex.InnerException != null && IsTransientTimeout(ex.InnerException);
         }
 
         protected virtual bool IsConnectionTimeout(Exception ex)
