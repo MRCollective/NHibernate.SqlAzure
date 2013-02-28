@@ -21,7 +21,7 @@ namespace NHibernate.SqlAzure.Tests
             }
             catch (Exception e)
             {
-                Assert.That(new SqlAzureTransientErrorDetectionStrategyWithTimeouts().IsTransient(e.InnerException));
+                Assert.That(new SqlAzureTransientErrorDetectionStrategyWithTimeouts().IsTransient(e));
                 return;
             }
             Assert.Fail("No timeout exception was thrown!");
