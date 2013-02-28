@@ -26,7 +26,7 @@ namespace NHibernate.SqlAzure.RetryStrategies
                 return true;
 
             if (ex.InnerException != null)
-                return IsOurTransient(ex);
+                return IsOurTransient(ex.InnerException);
            
             return false;
         }
