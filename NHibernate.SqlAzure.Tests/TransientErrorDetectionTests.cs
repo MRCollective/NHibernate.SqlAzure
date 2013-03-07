@@ -34,17 +34,17 @@ namespace NHibernate.SqlAzure.Tests
         }
 
         [Test]
-        public void Mark_unwrapped_timeout_exception_as_transient()
+        public void Mark_unwrapped_timeout_exception_as_transient([Values(-2, 121)] int errorCode)
         {
-            var e = SqlExceptionGenerator.GetSqlException(-2);
+            var e = SqlExceptionGenerator.GetSqlException(errorCode);
 
             Assert.That(new SqlAzureTransientErrorDetectionStrategyWithTimeouts().IsTransient(e));
         }
 
         [Test]
-        public void Mark_wrapped_timeout_exception_as_transient()
+        public void Mark_wrapped_timeout_exception_as_transient([Values(-2, 121)] int errorCode)
         {
-            var e = new GenericADOException("Wrapped exception", SqlExceptionGenerator.GetSqlException(-2));
+            var e = new GenericADOException("Wrapped exception", SqlExceptionGenerator.GetSqlException(errorCode));
 
             Assert.That(new SqlAzureTransientErrorDetectionStrategyWithTimeouts().IsTransient(e));
         }
