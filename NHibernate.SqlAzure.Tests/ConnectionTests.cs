@@ -35,7 +35,7 @@ namespace NHibernate.SqlAzure.Tests
         {
             using (TemporarilyShutdownSqlServerExpress())
             {
-                for (var i = 0; i < 100; i++)
+                for (var i = 0; i < 200; i++)
                 {
                     using (var session = CreateSession())
                     {
