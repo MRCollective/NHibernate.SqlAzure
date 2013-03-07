@@ -12,7 +12,15 @@ namespace NHibernate.SqlAzure.RetryStrategies
         private readonly EntLibSqlAzureTransientErrorDetectionStrategy _entLibStrategy = new EntLibSqlAzureTransientErrorDetectionStrategy();
         public virtual bool IsTransient(Exception ex)
         {
-            return _entLibStrategy.IsTransient(ex);
+            return IsTransientAzureException(ex);
+        }
+
+        private bool IsTransientAzureException(Exception ex)
+        {
+            if (ex == null)
+                return false;
+
+            return _entLibStrategy.IsTransient(ex) || IsTransientAzureException(ex.InnerException);
         }
     }
 }
