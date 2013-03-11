@@ -33,7 +33,7 @@ namespace NHibernate.SqlAzure.Tests.Config
                         .UseOverridesFromAssemblyOf<NHibernateConfiguration<SqlClientDriver>>()
                     )
                 )
-                // Show SQL so we can see what and when sql is executed by NH
+                // Ensure batching is used
                 .ExposeConfiguration(c => c.SetProperty(Environment.BatchSize, "10"))
                 // Turn off cache to make sure all calls actually go to the database
                 .ExposeConfiguration(c => c.SetProperty(Environment.UseQueryCache, "false"))
