@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.SqlClient;
+using System.Linq;
 using Microsoft.Practices.TransientFaultHandling;
 using EntLibSqlAzureTransientErrorDetectionStrategy = Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure.SqlAzureTransientErrorDetectionStrategy;
 
@@ -20,7 +22,20 @@ namespace NHibernate.SqlAzure.RetryStrategies
             if (ex == null)
                 return false;
 
-            return _entLibStrategy.IsTransient(ex) || IsTransientAzureException(ex.InnerException);
+            return _entLibStrategy.IsTransient(ex)
+                || IsNewTransientError(ex)
+                || IsTransientAzureException(ex.InnerException);
+        }
+
+        private bool IsNewTransientError(Exception ex)
+        {
+            // From Enterprise Library 6 changelog (see https://entlib.codeplex.com/wikipage?title=EntLib6ReleaseNotes):
+            // Error code 40540 from SQL Database added as a transient error (see http://msdn.microsoft.com/en-us/library/ff394106.aspx#bkmk_throt_errors).
+            // Added error codes 10928 and 10929 from SQL Database as transient errors (see http://blogs.msdn.com/b/psssql/archive/2012/10/31/worker-thread-governance-coming-to-azure-sql-database.aspx).
+
+            SqlException sqlException;
+            return (sqlException = ex as SqlException) != null
+                   && sqlException.Errors.Cast<SqlError>().Any(error => error.Number == 40540 || error.Number == 10928 || error.Number == 10929);
         }
     }
 }
