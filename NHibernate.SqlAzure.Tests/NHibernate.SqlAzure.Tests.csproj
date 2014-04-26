@@ -96,7 +96,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\NHibernateProfilerBootstrapper.cs" />
     <Compile Include="Config\FluentRunner.cs" />
     <Compile Include="Config\NHibernateConfiguration.cs" />
     <Compile Include="Config\NHibernateTestBase.cs" />
@@ -120,9 +119,6 @@
       <Project>{C51908DF-FAEA-4EAA-8F75-096346537C33}</Project>
       <Name>NHibernate.SqlAzure</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_Start\NHibernateProfilerBootstrapper.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
