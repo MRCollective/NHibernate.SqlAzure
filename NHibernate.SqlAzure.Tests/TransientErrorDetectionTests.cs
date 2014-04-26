@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Microsoft.Practices.TransientFaultHandling;
+using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 using NHibernate.Driver;
 using NHibernate.Exceptions;
 using NHibernate.SqlAzure.RetryStrategies;

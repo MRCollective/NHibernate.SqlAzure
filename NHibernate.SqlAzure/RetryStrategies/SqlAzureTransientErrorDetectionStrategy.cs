@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
-using Microsoft.Practices.TransientFaultHandling;
-using EntLibSqlAzureTransientErrorDetectionStrategy = Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure.SqlAzureTransientErrorDetectionStrategy;
+using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
+
 
 namespace NHibernate.SqlAzure.RetryStrategies
 {
@@ -11,7 +11,7 @@ namespace NHibernate.SqlAzure.RetryStrategies
     /// </summary>
     public class SqlAzureTransientErrorDetectionStrategy : ITransientErrorDetectionStrategy
     {
-        private readonly EntLibSqlAzureTransientErrorDetectionStrategy _entLibStrategy = new EntLibSqlAzureTransientErrorDetectionStrategy();
+        private readonly SqlDatabaseTransientErrorDetectionStrategy _entLibStrategy = new SqlDatabaseTransientErrorDetectionStrategy();
         public virtual bool IsTransient(Exception ex)
         {
             return IsTransientAzureException(ex);
