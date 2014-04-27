@@ -2,6 +2,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure;
+using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
 namespace NHibernate.SqlAzure
 {

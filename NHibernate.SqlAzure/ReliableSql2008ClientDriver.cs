@@ -2,6 +2,7 @@
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure;
 using NHibernate.AdoNet;
 using NHibernate.Driver;
+using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
 namespace NHibernate.SqlAzure
 {
