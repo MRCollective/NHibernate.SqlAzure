@@ -5,7 +5,7 @@
        NHibernate.SqlAzure.Standalone
     </id>
     <version>
-       1.0.0
+       2.0.0
     </version>
     <authors>
        Robert Moore, Matthew Davies
@@ -31,12 +31,13 @@
     </language>
     <dependencies>
       <dependency id="NHibernate" version="3.3.3.4000" />
-      <dependency id="EnterpriseLibrary.WindowsAzure.TransientFaultHandling" version="[5.1.1209.1,6.0)" />
+      <dependency id="EnterpriseLibrary.TransientFaultHandling" version="6.0" />
+      <dependency id="EnterpriseLibrary.TransientFaultHandling.Data" version="6.0" />
     </dependencies>
   </metadata>
   <files>
-     <file src="bin\Release\NHibernate.SqlAzure.dll" target="lib\NET40" />
-     <file src="bin\Release\NHibernate.SqlAzure.pdb" target="lib\NET40" />
-     <file src="bin\Release\NHibernate.SqlAzure.XML" target="lib\NET40" />
+     <file src="bin\Release\NHibernate.SqlAzure.dll" target="lib\NET451" />
+     <file src="bin\Release\NHibernate.SqlAzure.pdb" target="lib\NET451" />
+     <file src="bin\Release\NHibernate.SqlAzure.XML" target="lib\NET451" />
   </files>
 </package>

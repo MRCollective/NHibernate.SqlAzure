@@ -98,7 +98,6 @@
     <Compile Include="SqlAzureClientDriverWithTimeoutRetries.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="NHibernate.SqlAzure.Standalone.nuspec" />
     <None Include="NHibernate.SqlAzure.nuspec" />
     <None Include="packages.config" />
