@@ -2,8 +2,8 @@
 
 The source code for NHibernate.SqlAzure is available under an MIT license as
 per below. If you are using the version of NHibernate.SqlAzure that is combined
-with the EnterpriseLibrary dlls then it is available under the Microsoft Public
-License (Ms-PL) as per http://entlib.codeplex.com/license.
+with the EnterpriseLibrary dlls then it is available under the EnterpriseLibrary
+license as per http://entlib.codeplex.com/license.
 
 -----
 
