@@ -3,7 +3,9 @@
 
 Provides an NHibernate driver that uses the Microsoft Transient Fault Handling library to allow for reliable SQL Azure connections.
 
-This library is build against a recent version of NHibernate (3.3.1.4000) so you will need to update to that version or later to use this library.
+This library is build against version 3.3.1.4000 of NHibernate so you will need to update to that version or later to use this library.
+
+Version 2 of this library targets the new version (6) of the Enterprise Library code and as such requires .NET 4.5. If you have a .NET 4.0 application then feel free to use the [latest version in the 1.0 range of this library](https://www.nuget.org/packages/NHibernate.SqlAzure/1.0.0.37).
 
 Using the provider when using Fluent NHibernate
 -----------------------------------------------
