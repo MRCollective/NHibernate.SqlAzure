@@ -14,14 +14,17 @@
       Provides an NHibernate driver that uses the Microsoft Transient Fault Handling library to allow for reliable SQL Azure connections.
       This package has the Microsoft Transient Fault Handling library IL-merged into it; for a version that doesn't see the NHibernate.SqlAzure.Standalone package.
     </description>
+    <releaseNotes>
+      Please see https://github.com/MRCollective/NHibernate.SqlAzure/releases for release notes and https://github.com/MRCollective/NHibernate.SqlAzure/blob/master/BREAKING_CHANGES.md for any breaking changes.
+    </releaseNotes>
     <projectUrl>
-      https://github.com/robdmoore/NHibernate.SqlAzure
+      https://github.com/MRCollective/NHibernate.SqlAzure
     </projectUrl>
     <licenseUrl>
-      https://github.com/robdmoore/NHibernate.SqlAzure/blob/master/LICENSE
+      https://github.com/MRCollective/NHibernate.SqlAzure/blob/master/LICENSE
     </licenseUrl>
     <iconUrl>
-      https://raw.github.com/robdmoore/NHibernate.SqlAzure/master/logo.png
+      https://raw.github.com/MRCollective/NHibernate.SqlAzure/master/logo.png
     </iconUrl>
     <tags>
        nhibernate, azure, sql, sql azure, transient
