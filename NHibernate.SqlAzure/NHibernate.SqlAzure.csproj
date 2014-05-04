@@ -37,10 +37,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>robdmoore.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
@@ -89,10 +86,13 @@
     <Compile Include="SqlAzureClientDriverWithTimeoutRetries.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NHibernate.SqlAzure.Standalone.nuspec" />
-    <None Include="NHibernate.SqlAzure.nuspec" />
+    <None Include="NHibernate.SqlAzure.Standalone.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="NHibernate.SqlAzure.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
-    <None Include="robdmoore.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

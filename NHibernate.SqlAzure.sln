@@ -5,6 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.SqlAzure", "NHib
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{9C23CAA3-08A2-498A-AB98-F803AC42C49E}"
 	ProjectSection(SolutionItems) = preProject
+		BREAKING_CHANGES.md = BREAKING_CHANGES.md
 		LICENSE = LICENSE
 		logo.png = logo.png
 		README.md = README.md
