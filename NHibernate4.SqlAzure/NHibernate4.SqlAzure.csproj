@@ -53,46 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NHibernate.SqlAzure\DefaultReliableSql2008ClientDriver.cs">
-      <Link>DefaultReliableSql2008ClientDriver.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableAdoNetTransactionFactory.cs">
-      <Link>ReliableAdoNetTransactionFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableAdoNetWithDistributedTransactionFactory.cs">
-      <Link>ReliableAdoNetWithDistributedTransactionFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableAdoTransaction.cs">
-      <Link>ReliableAdoTransaction.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableSql2008ClientDriver.cs">
-      <Link>ReliableSql2008ClientDriver.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableSqlClientBatchingBatcher.cs">
-      <Link>ReliableSqlClientBatchingBatcher.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableSqlClientBatchingBatcherFactory.cs">
-      <Link>ReliableSqlClientBatchingBatcherFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableSqlCommand.cs">
-      <Link>ReliableSqlCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableSqlDbConnection.cs">
-      <Link>ReliableSqlDbConnection.cs</Link>
-      <SubType>component</SubType>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\RetryStrategies\SqlAzureTransientErrorDetectionStrategy.cs">
-      <Link>RetryStrategies\SqlAzureTransientErrorDetectionStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\RetryStrategies\SqlAzureTransientErrorDetectionStrategyWithTimeouts.cs">
-      <Link>RetryStrategies\SqlAzureTransientErrorDetectionStrategyWithTimeouts.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\SqlAzureClientDriver.cs">
-      <Link>SqlAzureClientDriver.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\SqlAzureClientDriverWithTimeoutRetries.cs">
-      <Link>SqlAzureClientDriverWithTimeoutRetries.cs</Link>
-    </Compile>
+    <Compile Include="..\NHibernate.SqlAzure\**\*.cs" Exclude="..\NHibernate.SqlAzure\Properties\AssemblyInfo.cs;..\NHibernate.SqlAzure\obj\**;..\NHibernate.SqlAzure\bin\**;"/>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
