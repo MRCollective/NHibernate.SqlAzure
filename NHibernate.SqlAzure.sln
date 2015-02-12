@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22310.1
+VisualStudioVersion = 14.0.22512.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.SqlAzure", "NHibernate.SqlAzure\NHibernate.SqlAzure.csproj", "{C51908DF-FAEA-4EAA-8F75-096346537C33}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.SqlAzure.Tests", "NHibernate.SqlAzure.Tests\NHibernate.SqlAzure.Tests.csproj", "{887FD0A4-B8E0-4B3D-BF7E-4CC7090EB829}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate4.SqlAzure", "NHibernate4.SqlAzure\NHibernate4.SqlAzure.csproj", "{BF649532-3E8A-4DC7-9F43-9AB25E475BF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate4.SqlAzure.Tests", "NHibernate4.SqlAzure.Tests\NHibernate4.SqlAzure.Tests.csproj", "{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{BF649532-3E8A-4DC7-9F43-9AB25E475BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF649532-3E8A-4DC7-9F43-9AB25E475BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF649532-3E8A-4DC7-9F43-9AB25E475BF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
