@@ -30,6 +30,14 @@ To use the provider:
 	* or if you want the version that isn't IL-merged with the Microsoft Transient Fault Handling library then `Install-Package NHibernate.SqlAzure.Standalone` (note: that will add 2 other dependencies as well)
 3. Set the `connection.driver_class` property on the session factory configuration to `NHibernate.SqlAzure.SqlAzureClientDriver, NHibernate.SqlAzure`  (note: if you get Timeout exceptions then see the Advanced section below).
 
+NHibernate 4 support
+--------------------
+
+We have NHibernate 4 supports via separate NuGet packages thanks to [@rytmis](https://github.com/rytmis):
+
+* `Install-Package NHibernate4.SqlAzure`
+* `Install-Package NHibernate4.SqlAzure.Standalone`
+
 Reliable transactions
 ---------------------
 

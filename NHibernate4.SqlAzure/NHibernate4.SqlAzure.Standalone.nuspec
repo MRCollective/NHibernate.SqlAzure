@@ -42,5 +42,6 @@
      <file src="bin\Release\NHibernate.SqlAzure.dll" target="lib\NET45" />
      <file src="bin\Release\NHibernate.SqlAzure.pdb" target="lib\NET45" />
      <file src="bin\Release\NHibernate.SqlAzure.XML" target="lib\NET45" />
+     <file src="..\NHibernate.SqlAzure\**\*.cs" exclude="..\NHibernate.SqlAzure\obj\**\*.*" target="src" />
   </files>
 </package>
