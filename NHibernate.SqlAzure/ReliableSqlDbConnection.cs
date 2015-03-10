@@ -36,13 +36,11 @@ namespace NHibernate.SqlAzure
             return connection.ReliableConnection.Current;
         }
 
-        /// <summary>
-        /// Disposes the underling <see cref="ReliableSqlConnection"/> as well as the current class.
-        /// </summary>
-        public new void Dispose()
-        {
-            ReliableConnection.Dispose();
+        protected override void Dispose(bool disposing) {
             base.Dispose();
+            if (disposing) {
+                ReliableConnection.Dispose();
+            }
         }
 
         #region Wrapping code
