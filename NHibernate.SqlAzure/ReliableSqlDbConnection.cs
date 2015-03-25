@@ -12,6 +12,7 @@ namespace NHibernate.SqlAzure
     /// </summary>
     public class ReliableSqlDbConnection : DbConnection
     {
+        bool disposed = false;
         /// <summary>
         /// The underlying <see cref="ReliableSqlConnection"/>.
         /// </summary>
@@ -37,10 +38,13 @@ namespace NHibernate.SqlAzure
         }
 
         protected override void Dispose(bool disposing) {
-            base.Dispose();
+            if (disposed)
+                return;
             if (disposing) {
                 ReliableConnection.Dispose();
             }
+            disposed = true;
+            base.Dispose(disposing);
         }
 
         #region Wrapping code
