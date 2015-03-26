@@ -12,6 +12,7 @@ namespace NHibernate.SqlAzure
     /// </summary>
     public class ReliableSqlDbConnection : DbConnection
     {
+        bool disposed = false;
         /// <summary>
         /// The underlying <see cref="ReliableSqlConnection"/>.
         /// </summary>
@@ -36,13 +37,14 @@ namespace NHibernate.SqlAzure
             return connection.ReliableConnection.Current;
         }
 
-        /// <summary>
-        /// Disposes the underling <see cref="ReliableSqlConnection"/> as well as the current class.
-        /// </summary>
-        public new void Dispose()
-        {
-            ReliableConnection.Dispose();
-            base.Dispose();
+        protected override void Dispose(bool disposing) {
+            if (disposed)
+                return;
+            if (disposing) {
+                ReliableConnection.Dispose();
+            }
+            disposed = true;
+            base.Dispose(disposing);
         }
 
         #region Wrapping code
