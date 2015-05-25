@@ -9,7 +9,7 @@ namespace NHibernate.SqlAzure
     /// </summary>
     public class ReliableAdoTransaction : AdoTransaction, ITransaction
     {
-        private readonly ReliableSqlDbConnection _connection;
+        private readonly ISessionImplementor _session;
 
         /// <summary>
         /// Constructs a <see cref="ReliableAdoTransaction"/>.
@@ -17,7 +17,7 @@ namespace NHibernate.SqlAzure
         /// <param name="session">NHibernate session to use.</param>
         public ReliableAdoTransaction(ISessionImplementor session) : base(session)
         {
-            _connection = (ReliableSqlDbConnection) session.Connection;
+            _session = session;
         }
 
         public new void Begin()
@@ -27,7 +27,7 @@ namespace NHibernate.SqlAzure
 
         public new void Begin(IsolationLevel isolationLevel)
         {
-            ExecuteWithRetry(_connection, () => base.Begin(isolationLevel));
+            ExecuteWithRetry(_session.Connection as ReliableSqlDbConnection, () => base.Begin(isolationLevel));
         }
 
         /// <summary>
