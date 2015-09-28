@@ -1,0 +1,18 @@
+create:
+  include-footer: true
+  footer-heading: Where to get it
+  footer-content: You can download this release from [nuget](https://www.nuget.org/packages?q=nhibernate.sqlazure)
+  footer-includes-milestone: false
+  milestone-replace-text: '{milestone}'
+export:
+  include-created-date-in-title: false
+  created-date-string-format: MMMM dd, yyyy
+  perform-regex-removal: false
+  regex-text: '### Where to get it(\r\n)*You can .*\)'
+  multiline-regex: false
+issue-labels-include:
+- Bug
+- Feature
+- Improvement
+issue-labels-exclude:
+- Internal Refactoring
