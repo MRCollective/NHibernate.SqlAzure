@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
@@ -36,6 +37,8 @@ namespace NHibernate.SqlAzure.Tests.Config
         [TestFixtureSetUp]
         public void TestFixtureSetup()
         {
+            CreateTestDatabase();
+
             Migrator = new FluentRunner(ConnectionString, typeof(NHibernateConfiguration<>).Assembly);
 
             if (_sessionFactory != null)
@@ -45,6 +48,23 @@ namespace NHibernate.SqlAzure.Tests.Config
 
             var nHibernateConfig = new NHibernateConfiguration<T>(ConnectionString);
             _sessionFactory = nHibernateConfig.GetSessionFactory();
+        }
+
+        private void CreateTestDatabase()
+        {
+            var connectionBuilder = new SqlConnectionStringBuilder(ConnectionString);
+            var testDatabaseName = connectionBuilder.InitialCatalog;
+            connectionBuilder.InitialCatalog = "master";
+            using (var connection = new SqlConnection(connectionBuilder.ToString()))
+            {
+                connection.Open();
+                using (var command = new System.Data.SqlClient.SqlCommand(
+                    string.Format("USE master IF NOT EXISTS(select * from sys.databases where name = '{0}') CREATE DATABASE {0}", testDatabaseName), connection
+                ))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         protected ISession CreateSession()
