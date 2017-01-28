@@ -69,7 +69,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "$(TargetDir)Combined"
-"$(ProjectDir)..\packages\ilmerge.2.13.0307\ILMerge.exe" /v4 /target:library "$(TargetPath)" "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll" "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll" /out:"$(TargetDir)Combined\NHibernate.SqlAzure.dll"
+"$(ProjectDir)..\packages\ilmerge.2.14.1208\tools\ILMerge.exe" /v4 /target:library "$(TargetPath)" "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll" "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll" /out:"$(TargetDir)Combined\NHibernate.SqlAzure.dll"
 copy "$(TargetDir)NHibernate.SqlAzure.XML" "$(TargetDir)Combined\NHibernate.SqlAzure.XML"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
