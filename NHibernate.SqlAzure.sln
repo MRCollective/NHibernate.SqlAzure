@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22512.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.SqlAzure", "NHibernate.SqlAzure\NHibernate.SqlAzure.csproj", "{C51908DF-FAEA-4EAA-8F75-096346537C33}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate4.SqlAzure", "NHibernate4.SqlAzure\NHibernate4.SqlAzure.csproj", "{BF649532-3E8A-4DC7-9F43-9AB25E475BF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate4.SqlAzure.Tests", "NHibernate4.SqlAzure.Tests\NHibernate4.SqlAzure.Tests.csproj", "{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate5.SqlAzure", "NHibernate5.SqlAzure\NHibernate5.SqlAzure.csproj", "{895B6F59-B5BE-4796-847D-C3FF2C7EED66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,11 +43,16 @@ Global
 		{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{895B6F59-B5BE-4796-847D-C3FF2C7EED66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{895B6F59-B5BE-4796-847D-C3FF2C7EED66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{895B6F59-B5BE-4796-847D-C3FF2C7EED66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{895B6F59-B5BE-4796-847D-C3FF2C7EED66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45
+		SolutionGuid = {A2187D5F-03DE-4CF8-A458-16694FC9F9D6}
 	EndGlobalSection
 EndGlobal
