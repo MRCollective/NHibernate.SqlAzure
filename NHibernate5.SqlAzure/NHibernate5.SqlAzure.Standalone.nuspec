@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>
-       NHibernate4.SqlAzure.Standalone
+       NHibernate5.SqlAzure.Standalone
     </id>
     <version>
        2.0.0
