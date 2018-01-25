@@ -1,0 +1,55 @@
+version: 1.0.{build}
+configuration: Release
+before_build:
+- ps: >-
+    nuget restore
+
+    GitVersion /output buildserver /updateassemblyinfo
+
+    [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | Out-Null
+
+    [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement") | Out-Null
+
+
+    $serverName = $env:COMPUTERNAME
+
+    $instanceName = 'SQL2008'
+
+    $smo = 'Microsoft.SqlServer.Management.Smo.'
+
+    $wmi = new-object ($smo + 'Wmi.ManagedComputer')
+
+
+    # Enable TCP/IP
+
+    $uri = "ManagedComputer[@Name='$serverName']/ServerInstance[@Name='$instanceName']/ServerProtocol[@Name='Tcp']"
+
+    $Tcp = $wmi.GetSmoObject($uri)
+
+    $Tcp.IsEnabled = $true
+
+    $TCP.alter()
+
+
+    # Enable named pipes
+
+    $uri = "ManagedComputer[@Name='$serverName']/ ServerInstance[@Name='$instanceName']/ServerProtocol[@Name='Np']"
+
+    $Np = $wmi.GetSmoObject($uri)
+
+    $Np.IsEnabled = $true
+
+    $Np.Alter()
+
+    Set-Service SQLBrowser -StartupType Manual
+
+    Start-Service SQLBrowser
+
+    Start-Service "MSSQL`$$instanceName"
+build:
+  parallel: true
+  verbosity: minimal
+after_build:
+- cmd: nuget pack "C:\projects\nhibernate-sqlazure\NHibernate.SqlAzure\NHibernate.SqlAzure.csproj" -Properties "Configuration=Release;Platform=AnyCPU" -Symbols -Version %GitVersion_NuGetVersion%
+artifacts:
+- path: '*.nupkg'
