@@ -13,7 +13,7 @@ before_build:
 
     $serverName = $env:COMPUTERNAME
 
-    $instanceName = 'SQL2008'
+    $instanceName = 'SQL2008R2SP2'
 
     $smo = 'Microsoft.SqlServer.Management.Smo.'
 
