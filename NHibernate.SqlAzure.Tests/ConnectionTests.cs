@@ -21,10 +21,9 @@ namespace NHibernate.SqlAzure.Tests
     class WhenConnectingSql2008ClientDriverShould : ConnectionTests<Sql2008ClientDriver>
     {
         [Test]
-        [ExpectedException(typeof(SqlException))]
         public void Fail_to_establish_connection_during_temporary_shutdown_of_sql_server()
         {
-            TestConnectionEstablishment();
+            Assert.Throws<SqlException>(TestConnectionEstablishment, "No SqlException was thrown during temporary shutdown of SQL server, but one was expected.");
         }
     }
 

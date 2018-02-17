@@ -46,7 +46,7 @@ namespace NHibernate.SqlAzure.Tests
     }
 
     [TestFixture]
-    class SqlAzureClientDriverShould : SqlClientDriverShould<SqlAzureClientDriver> {}
+    class SqlAzureClientDriverShould : SqlClientDriverShould<SqlAzureClientDriver> { }
 
     [TestFixture]
     class SqlAzureClientDriverWithTimeoutRetriesShould : SqlClientDriverShould<SqlAzureClientDriverWithTimeoutRetries> { }
@@ -55,17 +55,26 @@ namespace NHibernate.SqlAzure.Tests
     class Sql2008ClientDriverShould : SqlClientDriverShould<Sql2008ClientDriver>
     {
         [Test]
-        [ExpectedException(typeof(GenericADOException))]
+        [ExpectedException(typeof(ExpectedErrorException))]
         public void Fail_to_execute_non_batching_commands_during_temporary_shutdown_of_sql_server()
         {
-            using (TemporarilyShutdownSqlServerExpress())
+            try
             {
-                for (var i = 0; i < 100; i++)
+                using (TemporarilyShutdownSqlServerExpress())
                 {
-                    Insert_and_select_entity();
-                    Thread.Sleep(50);
+                    for (var i = 0; i < 100; i++)
+                    {
+                        Insert_and_select_entity();
+                        Thread.Sleep(50);
+                    }
                 }
             }
+            catch (GenericADOException e)
+            {
+                Console.WriteLine(e);
+                throw new ExpectedErrorException();
+            }
+            Assert.Fail("There was no exception when executing non batching commands during temporary shutdown of SQL server, but one was expected.");
         }
 
         [Test]
@@ -83,18 +92,18 @@ namespace NHibernate.SqlAzure.Tests
                     }
                 }
             }
-            catch(GenericADOException e)
+            catch (GenericADOException e)
             {
                 Console.WriteLine(e);
                 throw new ExpectedErrorException();
             }
-            catch(TransactionException e)
+            catch (TransactionException e)
             {
                 Console.WriteLine(e);
                 throw new ExpectedErrorException();
             }
         }
-        public class ExpectedErrorException : Exception {}
+        public class ExpectedErrorException : Exception { }
     }
 
     abstract class SqlClientDriverShould<T> : PooledNHibernateTestBase<T> where T : SqlClientDriver
@@ -116,7 +125,7 @@ namespace NHibernate.SqlAzure.Tests
             using (var session = CreateSession())
             using (var session2 = CreateSession())
             {
-                var user = new User {Name = "Name"};
+                var user = new User { Name = "Name" };
                 session.Save(user);
 
                 var dbUser = session2.Get<User>(user.Id);
@@ -190,7 +199,7 @@ namespace NHibernate.SqlAzure.Tests
             using (var session = CreateSession())
             using (var session2 = CreateSession())
             {
-                var user = new User {Name = "Name1"};
+                var user = new User { Name = "Name1" };
                 session.Save(user);
                 session.Flush();
                 user.Name = "Name2";
