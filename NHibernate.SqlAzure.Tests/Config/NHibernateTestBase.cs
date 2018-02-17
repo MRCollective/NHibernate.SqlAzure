@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
+using System.Threading.Tasks;
 using NHibernate.Driver;
 using NUnit.Framework;
 
@@ -93,18 +93,12 @@ namespace NHibernate.SqlAzure.Tests.Config
             }
         }
 
-        protected ThreadKiller TemporarilyShutdownSqlServerExpress()
+        protected CancellableTask TemporarilyShutdownSqlServerExpress()
         {
-            var t = new Thread(MakeSqlTransient);
-            t.Start();
-            return new ThreadKiller(t);
-        }
-
-        private void MakeSqlTransient()
-        {
-            try
+            var tokenSource = new CancellationTokenSource();
+            Task.Run(() =>
             {
-                while (true)
+                while (!tokenSource.IsCancellationRequested)
                 {
                     _serviceController.Refresh();
                     if (_serviceController.Status == ServiceControllerStatus.Running)
@@ -117,25 +111,22 @@ namespace NHibernate.SqlAzure.Tests.Config
 
                     Thread.Sleep(20);
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error while making SQL transient: {0}", e);
-            }
+            }, tokenSource.Token);
+            return new CancellableTask(tokenSource);
         }
-
-        protected class ThreadKiller : IDisposable
+        
+        protected class CancellableTask : IDisposable
         {
-            private readonly Thread _threadToWaitFor;
+            private readonly CancellationTokenSource _tokenSource;
 
-            public ThreadKiller(Thread threadToWaitFor)
+            public CancellableTask(CancellationTokenSource tokenSource)
             {
-                _threadToWaitFor = threadToWaitFor;
+                _tokenSource = tokenSource;
             }
 
             public void Dispose()
             {
-                _threadToWaitFor.Abort();
+                _tokenSource.Cancel();
             }
         }
         #endregion
