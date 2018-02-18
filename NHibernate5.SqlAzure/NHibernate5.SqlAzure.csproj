@@ -7,8 +7,8 @@
     <ProjectGuid>{895B6F59-B5BE-4796-847D-C3FF2C7EED66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NHibernate5.SqlAzure</RootNamespace>
-    <AssemblyName>NHibernate5.SqlAzure</AssemblyName>
+    <RootNamespace>NHibernate.SqlAzure</RootNamespace>
+    <AssemblyName>NHibernate.SqlAzure</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
