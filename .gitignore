@@ -13,3 +13,4 @@ _ReSharper*
 packages
 *.ncrunch*
 *.DotSettings
+/.vs/NHibernate.SqlAzure/v15/Server/sqlite3
