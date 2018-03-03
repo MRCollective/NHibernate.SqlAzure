@@ -1,5 +1,9 @@
-﻿NHibernate Reliable SQL Azure Driver
+NHibernate Reliable SQL Azure Driver
 ====================================
+
+[![Build status](https://ci.appveyor.com/api/projects/status/8wn6khaxpo16frgy?svg=true)](https://ci.appveyor.com/project/MRCollective/nhibernate-sqlazure)
+[![NuGet downloads](https://img.shields.io/nuget/dt/NHibernate.SQLAzure.svg)](https://www.nuget.org/packages/NHibernate.SQLAzure) 
+[![NuGet version](https://img.shields.io/nuget/vpre/NHibernate.SQLAzure.svg)](https://www.nuget.org/packages/NHibernate.SQLAzure)
 
 Provides an NHibernate driver that uses the Microsoft Transient Fault Handling library to allow for reliable SQL Azure connections.
 
