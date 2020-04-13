@@ -49,7 +49,9 @@ namespace NHibernate.SqlAzure
         #region Wrapping code
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
-            return (DbTransaction) ReliableConnection.BeginTransaction(isolationLevel);
+            return ReliableConnection.ConnectionRetryPolicy.ExecuteAction(
+                () => (DbTransaction)ReliableConnection.BeginTransaction(isolationLevel)
+            );
         }
 
         public override void Close()
