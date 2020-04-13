@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NHibernate5.SqlAzure</name>
+    </assembly>
+    <members>
+        <member name="T:NHibernate.SqlAzure.DefaultReliableSql2008ClientDriver`1">
+            <summary>
+            Default retry logic implementation for a <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/> that allows you to
+             specify the transient error detection strategy.
+            </summary>
+            <typeparam name="TTransientErrorDetectionStrategy">The transient error detection strategy you want to use</typeparam>
+        </member>
+        <member name="M:NHibernate.SqlAzure.DefaultReliableSql2008ClientDriver`1.ConnectionRetryEventHandler">
+            <summary>
+            An event handler delegate which will be called on connection retries.
+            Only override this if you want to explicitly capture connection retries, otherwise override RetryEventHandler
+            </summary>
+            <returns>A custom method for handling the retry events</returns>
+        </member>
+        <member name="M:NHibernate.SqlAzure.DefaultReliableSql2008ClientDriver`1.CommandRetryEventHandler">
+            <summary>
+            An event handler delegate which will be called on command retries.
+            Only override this if you want to explicitly capture command retries, otherwise override RetryEventHandler
+            </summary>
+            <returns>A custom method for handling the retry events</returns>
+        </member>
+        <member name="M:NHibernate.SqlAzure.DefaultReliableSql2008ClientDriver`1.RetryEventHandler">
+            <summary>
+            An event handler delegate which will be called on connection and command retries.
+            If you override ConnectionRetryEventHandler and CommandRetryEventHandler then this is redundant.
+            </summary>
+            <returns>A custom method for handling the retry events</returns>
+        </member>
+        <member name="T:NHibernate.SqlAzure.ReliableAdoNetTransactionFactory">
+            <summary>
+            An NHibernate transaction factory that provides retry logic for transient errors when executing transactions.
+            </summary>
+            <remarks>
+            Requires the connection to be a <see cref="T:NHibernate.SqlAzure.ReliableSqlDbConnection"/>
+            </remarks>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableAdoNetTransactionFactory.ExecuteWorkInIsolation(NHibernate.Engine.ISessionImplementor,NHibernate.Engine.Transaction.IIsolatedWork,System.Boolean)">
+            <summary>
+            Executes some work in isolation.
+            </summary>
+            <param name="session">The NHibernate session</param>
+            <param name="work">The work to execute</param>
+            <param name="transacted">Whether or not to wrap the work in a transaction</param>
+        </member>
+        <member name="T:NHibernate.SqlAzure.ReliableAdoNetWithDistributedTransactionFactory">
+            <summary>
+            An NHibernate transaction factory that provides retry logic for transient errors when executing transactions.
+            It is aware of Distributed Transactions.
+            </summary>
+            <remarks>
+            Requires the connection to be a <see cref="T:NHibernate.SqlAzure.ReliableSqlDbConnection"/>
+            </remarks>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableAdoNetWithDistributedTransactionFactory.ExecuteWorkInIsolation(NHibernate.Engine.ISessionImplementor,NHibernate.Engine.Transaction.IIsolatedWork,System.Boolean)">
+            <summary>
+            Executes some work in isolation.
+            </summary>
+            <param name="session">The NHibernate session</param>
+            <param name="work">The work to execute</param>
+            <param name="transacted">Whether or not to wrap the work in a transaction</param>
+        </member>
+        <member name="T:NHibernate.SqlAzure.ReliableAdoTransaction">
+            <summary>
+            Provides a transaction implementation that includes transient fault-handling retry logic.
+            </summary>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableAdoTransaction.#ctor(NHibernate.Engine.ISessionImplementor)">
+            <summary>
+            Constructs a <see cref="T:NHibernate.SqlAzure.ReliableAdoTransaction"/>.
+            </summary>
+            <param name="session">NHibernate session to use.</param>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableAdoTransaction.ExecuteWithRetry(NHibernate.SqlAzure.ReliableSqlDbConnection,System.Action)">
+            <summary>
+            Executes the given action with the command retry policy on the given <see cref="T:NHibernate.SqlAzure.ReliableSqlDbConnection"/>.
+            </summary>
+            <param name="connection">The reliable connection</param>
+            <param name="action">The action to execute</param>
+        </member>
+        <member name="T:NHibernate.SqlAzure.ReliableSql2008ClientDriver">
+            <summary>
+            Abstract base class that enables the creation of an NHibernate client driver that extends the Sql 2008 driver,
+            but adds in transient fault handling retry logic via <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/>.
+            </summary>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableSql2008ClientDriver.CreateReliableConnection">
+            <summary>
+            Provides a <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/> instance to use for connections.
+            </summary>
+            <returns>A reliable connection</returns>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableSql2008ClientDriver.CreateConnection">
+            <summary>
+            Creates an uninitialized <see cref="T:System.Data.DbConnection"/> object for the SqlClientDriver.
+            </summary>
+            <value>
+            An unitialized <see cref="T:System.Data.SqlClient.SqlConnection"/> object.
+            </value>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableSql2008ClientDriver.CreateCommand">
+            <summary>
+            Creates an uninitialized <see cref="T:System.Data.DbCommand"/> object for the SqlClientDriver.
+            </summary>
+            <value>
+            An unitialized <see cref="T:System.Data.SqlClient.SqlCommand"/> object.
+            </value>
+        </member>
+        <member name="P:NHibernate.SqlAzure.ReliableSql2008ClientDriver.BatcherFactoryClass">
+            <summary>
+            Returns the class to use for the Batcher Factory.
+            </summary>
+        </member>
+        <member name="T:NHibernate.SqlAzure.ReliableSqlClientBatchingBatcher">
+            <summary>
+            Exposes <see cref="T:NHibernate.AdoNet.SqlClientBatchingBatcher"/> functionality when a <see cref="T:NHibernate.SqlAzure.ReliableSqlDbConnection"/>
+            connection is being used.
+            </summary>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableSqlClientBatchingBatcher.Prepare(System.Data.Common.DbCommand)">
+            <summary>
+            Prepares the <see cref="T:System.Data.Common.DbCommand"/> for execution in the database.
+            </summary>
+            <remarks>
+            This takes care of hooking the <see cref="T:System.Data.Common.DbCommand"/> up to an <see cref="T:System.Data.Common.DbConnection"/>
+            and <see cref="T:System.Data.Common.DbTransaction"/> if one exists.  It will call <c>Prepare</c> if the Driver
+            supports preparing commands.
+            </remarks>
+        </member>
+        <member name="T:NHibernate.SqlAzure.ReliableSqlClientBatchingBatcherFactory">
+            <summary>
+            An <see cref="T:NHibernate.AdoNet.IBatcherFactory"/> implementation that creates
+            <see cref="T:NHibernate.SqlAzure.ReliableSqlClientBatchingBatcher"/> instances.
+            </summary>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableSqlClientBatchingBatcherFactory.CreateBatcher(NHibernate.AdoNet.ConnectionManager,NHibernate.IInterceptor)">
+            <summary>
+            Creates the batcher.
+            </summary>
+            <param name="connectionManager">The connection manager</param>
+            <param name="interceptor">The interceptor</param>
+            <returns>The <see cref="T:NHibernate.SqlAzure.ReliableSqlClientBatchingBatcher"/> instance</returns>
+        </member>
+        <member name="T:NHibernate.SqlAzure.ReliableSqlCommand">
+            <summary>
+            An <see cref="T:System.Data.IDbCommand"/> implementation that wraps a <see cref="N:NHibernate.SqlCommand"/> object such that any
+            queries that are executed are executed via a <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/>.
+            </summary>
+            <remarks>
+            Note: For this to work it requires that the Connection property be set with a <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/> object.
+            </remarks>
+        </member>
+        <member name="P:NHibernate.SqlAzure.ReliableSqlCommand.Current">
+            <summary>
+            The underlying <see cref="N:NHibernate.SqlCommand"/> being proxied.
+            </summary>
+        </member>
+        <member name="P:NHibernate.SqlAzure.ReliableSqlCommand.ReliableConnection">
+            <summary>
+            The <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/> that has been assigned to the command via the Connection property.
+            </summary>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableSqlCommand.#ctor">
+            <summary>
+            Constructs a <see cref="T:NHibernate.SqlAzure.ReliableSqlCommand"/>.
+            </summary>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableSqlCommand.op_Explicit(NHibernate.SqlAzure.ReliableSqlCommand)~System.Data.SqlClient.SqlCommand">
+            <summary>
+            Explicit type-casting between a <see cref="T:NHibernate.SqlAzure.ReliableSqlCommand"/> and a <see cref="N:NHibernate.SqlCommand"/>.
+            </summary>
+            <param name="command">The <see cref="T:NHibernate.SqlAzure.ReliableSqlCommand"/> being casted</param>
+            <returns>The underlying <see cref="N:NHibernate.SqlCommand"/> being proxied.</returns>
+        </member>
+        <member name="P:NHibernate.SqlAzure.ReliableSqlCommand.DbConnection">
+            <summary>
+            Returns the underlying <see cref="T:System.Data.SqlClient.SqlConnection"/> and expects a <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/> when being set.
+            </summary>
+        </member>
+        <member name="T:NHibernate.SqlAzure.ReliableSqlDbConnection">
+            <summary>
+            Wrap <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/> in a class that extends <see cref="T:System.Data.Common.DbConnection"/>
+            so internal type casts within NHibernate don't fail.
+            </summary>
+        </member>
+        <member name="P:NHibernate.SqlAzure.ReliableSqlDbConnection.ReliableConnection">
+            <summary>
+            The underlying <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/>.
+            </summary>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableSqlDbConnection.#ctor(Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection)">
+            <summary>
+            Constructs a <see cref="T:NHibernate.SqlAzure.ReliableSqlDbConnection"/> to wrap around the given <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/>.
+            </summary>
+            <param name="connection">The <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/> to wrap</param>
+        </member>
+        <member name="M:NHibernate.SqlAzure.ReliableSqlDbConnection.op_Explicit(NHibernate.SqlAzure.ReliableSqlDbConnection)~System.Data.SqlClient.SqlConnection">
+            <summary>
+            Explicit type-casting between <see cref="T:NHibernate.SqlAzure.ReliableSqlDbConnection"/> and <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/>.
+            </summary>
+            <param name="connection">The <see cref="T:NHibernate.SqlAzure.ReliableSqlDbConnection"/> being casted</param>
+            <returns>The underlying <see cref="T:Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ReliableSqlConnection"/></returns>
+        </member>
+        <member name="T:NHibernate.SqlAzure.RetryStrategies.SqlAzureTransientErrorDetectionStrategy">
+            <summary>
+            Transient error detection strategy for SQL Azure that is a copy of the Enterprise Library detection strategy.
+            </summary>
+        </member>
+        <member name="T:NHibernate.SqlAzure.RetryStrategies.SqlAzureTransientErrorDetectionStrategyWithTimeouts">
+            <summary>
+            Transient error detection strategy for SQL Azure that extends the Enterprise Library detection strategy and also detects timeout exceptions.
+            </summary>
+        </member>
+        <member name="T:NHibernate.SqlAzure.SqlAzureClientDriver">
+            <summary>
+            NHibernate client driver for SQL Azure that includes the Enterprise Library transient fault-handling.
+            Note: It doesn't handle timeout errors, which can sometimes be transient. If you have timeout errors
+            that aren't caused by unoptimised queries then use 
+            </summary>
+        </member>
+        <member name="T:NHibernate.SqlAzure.SqlAzureClientDriverWithTimeoutRetries">
+            <summary>
+            NHibernate client driver for SQL Azure that includes the Enterprise Library transient fault-handling as well as timeout retries.
+            Note: Timeout errors can be caused by unoptimised queries that you might be executing as well as being a transient exception.
+            </summary>
+        </member>
+    </members>
+</doc>
