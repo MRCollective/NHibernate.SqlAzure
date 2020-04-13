@@ -32,19 +32,6 @@
     <DocumentationFile>bin\Release\NHibernate.SqlAzure.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling">
-      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data">
-      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate, Version=4.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <HintPath>..\packages\NHibernate.4.1.0.4000\lib\net40\NHibernate.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NHibernate.SqlAzure\**\*.cs" Exclude="..\NHibernate.SqlAzure\Properties\AssemblyInfo.cs;..\NHibernate.SqlAzure\obj\**;..\NHibernate.SqlAzure\bin\**;"/>
+    <Compile Include="..\NHibernate.SqlAzure\**\*.cs" Exclude="..\NHibernate.SqlAzure\Properties\AssemblyInfo.cs;..\NHibernate.SqlAzure\obj\**;..\NHibernate.SqlAzure\bin\**;" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +51,17 @@
     <None Include="NHibernate4.SqlAzure.Standalone.nuspec">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.Data">
+      <Version>6.0.1304.1</Version>
+    </PackageReference>
+    <PackageReference Include="ILMerge">
+      <Version>2.14.1208</Version>
+    </PackageReference>
+    <PackageReference Include="NHibernate">
+      <Version>4.1.0.4000</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
