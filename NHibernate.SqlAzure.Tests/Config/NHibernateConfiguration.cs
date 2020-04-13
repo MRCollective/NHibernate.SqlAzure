@@ -7,6 +7,7 @@ using NHibernate.Cfg;
 using NHibernate.Driver;
 using NHibernate.SqlAzure.Tests.Entities;
 using NHibernate.Tool.hbm2ddl;
+using System;
 
 namespace NHibernate.SqlAzure.Tests.Config
 {
@@ -23,7 +24,14 @@ namespace NHibernate.SqlAzure.Tests.Config
 
         public ISessionFactory GetSessionFactory()
         {
-            NHibernateProfiler.Initialize();
+            try
+            {
+                NHibernateProfiler.Initialize();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Not using NHibernateProfiler: " + ex);
+            }
 
             var config = Fluently.Configure()
                 .Database(_databaseConfig)
