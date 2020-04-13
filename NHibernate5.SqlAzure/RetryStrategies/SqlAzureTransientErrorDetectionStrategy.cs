@@ -15,8 +15,9 @@ namespace NHibernate.SqlAzure.RetryStrategies
         // Error code 40540 from SQL Database added as a transient error (see http://msdn.microsoft.com/en-us/library/ff394106.aspx#bkmk_throt_errors).
         // Added error codes 10928 and 10929 from SQL Database as transient errors (see http://blogs.msdn.com/b/psssql/archive/2012/10/31/worker-thread-governance-coming-to-azure-sql-database.aspx).
         // Added error codes 4060, 40197, 40501, 40613 from MSDN documentation (see https://azure.microsoft.com/en-us/documentation/articles/sql-database-develop-error-messages/)
+        // Added errror code 17142 (SQL Server Service has Been Paused. No New Connections Will be Allowed) for better testing
 
-        private readonly int[] _errorNumbers = new int[] { 40540, 10928, 10929, 4060, 40197, 40501, 40613 };
+        private readonly int[] _errorNumbers = new int[] { 40540, 10928, 10929, 4060, 40197, 40501, 40613, 17142 };
 
         private readonly SqlDatabaseTransientErrorDetectionStrategy _entLibStrategy = new SqlDatabaseTransientErrorDetectionStrategy();
 
