@@ -98,19 +98,18 @@ namespace NHibernate.SqlAzure.Tests.Config
             var tokenSource = new CancellationTokenSource();
             Task.Run(() =>
             {
-                while (!tokenSource.IsCancellationRequested)
-                {
-                    _serviceController.Refresh();
-                    if (_serviceController.Status == ServiceControllerStatus.Running)
-                        _serviceController.Pause();
-                    _serviceController.WaitForStatus(ServiceControllerStatus.Paused);
+                Thread.Sleep(100);
 
-                    _serviceController.Refresh();
-                    _serviceController.Continue();
-                    _serviceController.WaitForStatus(ServiceControllerStatus.Running);
+                _serviceController.Refresh();
+                if (_serviceController.Status == ServiceControllerStatus.Running)
+                    _serviceController.Pause();
+                _serviceController.WaitForStatus(ServiceControllerStatus.Paused);
 
-                    Thread.Sleep(20);
-                }
+                Thread.Sleep(50);
+
+                _serviceController.Refresh();
+                _serviceController.Continue();
+                _serviceController.WaitForStatus(ServiceControllerStatus.Running);
             }, tokenSource.Token);
             return new CancellableTask(tokenSource);
         }
