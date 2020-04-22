@@ -33,7 +33,7 @@
        en-US 
     </language>
     <dependencies>
-      <dependency id="NHibernate" version="[5.0, 5.1)" />
+      <dependency id="NHibernate" version="[5.1, 5.3)" />
     </dependencies>
   </metadata>
   <files>

@@ -36,7 +36,7 @@ namespace NHibernate.SqlAzure.Tests
         {
             using (TemporarilyShutdownSqlServerExpress())
             {
-                for (var i = 0; i < 20; i++)
+                for (var i = 0; i < 100; i++)
                 {
                     Insert_and_select_multiple_entities();
                     Thread.Sleep(50);
@@ -62,7 +62,7 @@ namespace NHibernate.SqlAzure.Tests
             {
                 using (TemporarilyShutdownSqlServerExpress())
                 {
-                    for (var i = 0; i < 1000; i++)
+                    for (var i = 0; i < 100; i++)
                     {
                         Insert_and_select_entity();
                         Thread.Sleep(50);

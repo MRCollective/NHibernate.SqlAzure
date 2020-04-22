@@ -70,7 +70,7 @@ namespace NHibernate.SqlAzure
             Driver.AdjustCommand(batchUpdate);
             string lineWithParameters = null;
             var sqlStatementLogger = Factory.Settings.SqlStatementLogger;
-            if (sqlStatementLogger.IsDebugEnabled || Log.IsDebugEnabled)
+            if (sqlStatementLogger.IsDebugEnabled || Log.IsDebugEnabled())
             {
                 lineWithParameters = sqlStatementLogger.GetCommandLineWithParameters(batchUpdate);
                 var formatStyle = sqlStatementLogger.DetermineActualStyle(FormatStyle.Basic);
@@ -80,7 +80,7 @@ namespace NHibernate.SqlAzure
                     .Append(":")
                     .AppendLine(lineWithParameters);
             }
-            if (Log.IsDebugEnabled)
+            if (Log.IsDebugEnabled())
             {
                 Log.Debug("Adding to batch:" + lineWithParameters);
             }
@@ -98,7 +98,7 @@ namespace NHibernate.SqlAzure
         protected void ExecuteBatch(IDbCommand ps)
         {
             #region NHibernate code
-            Log.DebugFormat("Executing batch");
+            Log.Debug("Executing batch");
             CheckReaders();
             Prepare(_currentBatch.BatchCommand);
             if (Factory.Settings.SqlStatementLogger.IsDebugEnabled)

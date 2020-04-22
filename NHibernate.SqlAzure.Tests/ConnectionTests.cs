@@ -34,12 +34,12 @@ namespace NHibernate.SqlAzure.Tests
         {
             using (TemporarilyShutdownSqlServerExpress())
             {
-                for (var i = 0; i < 1000; i++)
+                for (var i = 0; i < 100; i++)
                 {
                     using (var session = CreateSession())
                     {
                         Assert.That(session.Connection.State == ConnectionState.Open);
-                        Thread.Sleep(1);
+                        Thread.Sleep(50);
                     }
                 }
             }
