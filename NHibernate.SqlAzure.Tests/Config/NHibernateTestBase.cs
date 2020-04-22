@@ -98,22 +98,29 @@ namespace NHibernate.SqlAzure.Tests.Config
             var tokenSource = new CancellationTokenSource();
             Task.Run(() =>
             {
-                Thread.Sleep(100);
+                // tests run for about 5 seconds, 
+                // lets wait for 1 second and then pause for 3 seconds, this will assure a retry and a retry with backoff will happen
+
+                Thread.Sleep(1000);
 
                 _serviceController.Refresh();
                 if (_serviceController.Status == ServiceControllerStatus.Running)
                     _serviceController.Pause();
                 _serviceController.WaitForStatus(ServiceControllerStatus.Paused);
 
-                Thread.Sleep(50);
+                Console.WriteLine(DateTime.Now.ToString("s:fff") + " SQLServer paused");
+                Thread.Sleep(3000);
 
                 _serviceController.Refresh();
                 _serviceController.Continue();
                 _serviceController.WaitForStatus(ServiceControllerStatus.Running);
+                Console.WriteLine(DateTime.Now.ToString("s:fff") + " SQLServer continued");
+
             }, tokenSource.Token);
+
             return new CancellableTask(tokenSource);
         }
-        
+
         protected class CancellableTask : IDisposable
         {
             private readonly CancellationTokenSource _tokenSource;
