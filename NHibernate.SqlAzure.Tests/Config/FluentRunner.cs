@@ -42,7 +42,11 @@ namespace NHibernate.SqlAzure.Tests.Config
                 Database = _database,
                 Task = _task,
                 Connection = _connectionString,
+#if NET45
                 Target = _migrationAssembly.CodeBase.Replace("file:///", ""),
+#else
+                Targets = new string[] { _migrationAssembly.CodeBase.Replace("file:///", "") },
+#endif
                 Version = _version
             };
 
