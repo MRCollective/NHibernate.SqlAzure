@@ -1,42 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
     <AssemblyTitle>NHibernate5.SqlAzure.Tests</AssemblyTitle>
     <Product>NHibernate5.SqlAzure.Tests</Product>
     <Copyright>Copyright ©  2018</Copyright>
   </PropertyGroup>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <ItemGroup>
-    <PackageReference Include="Antlr3.Runtime" Version="3.5.1" />
     <PackageReference Include="EnterpriseLibrary.TransientFaultHandling" Version="6.0.1304.0" />
     <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.Data" Version="6.0.1304.1" />
-    <PackageReference Include="FluentMigrator" Version="1.1.2.1" />
-    <PackageReference Include="FluentMigrator.Runner" Version="1.1.1.26" />
+    <PackageReference Include="FluentMigrator" Version="3.2.6" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.2.6" />
     <PackageReference Include="FluentNHibernate" Version="2.0.3.0" />
     <PackageReference Include="Iesi.Collections" Version="4.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="3.0.61" />
-    <PackageReference Include="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
     <PackageReference Include="NBuilder" Version="3.0.1.1" />
     <PackageReference Include="NHibernate" Version="5.2.3" />
     <PackageReference Include="NHibernateProfiler" Version="5.0.5044" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Remotion.Linq" Version="2.2.0" />
-    <PackageReference Include="Remotion.Linq.EagerFetching" Version="2.2.0" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.4.1" />
-    <PackageReference Include="WebActivator" Version="1.4.4" />
-    <PackageReference Include="WebActivatorEx" Version="2.0.5" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

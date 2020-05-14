@@ -13,7 +13,6 @@
     <PackageReference Include="FluentNHibernate" Version="1.4.0.0" />
     <PackageReference Include="Iesi.Collections" Version="3.2.0.4000" />
     <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="3.0.61" />
-    <PackageReference Include="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
     <PackageReference Include="NBuilder" Version="3.0.1.1" />
     <PackageReference Include="NHibernate" Version="3.3.3.4001" />
     <PackageReference Include="NHibernateProfiler" Version="1.0.0.951" />
@@ -23,7 +22,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="WebActivator" Version="1.4.4" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Configuration" />
