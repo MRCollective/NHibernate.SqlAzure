@@ -55,53 +55,56 @@ namespace NHibernate.SqlAzure.Tests
     class Sql2008ClientDriverShould : SqlClientDriverShould<Sql2008ClientDriver>
     {
         [Test]
-        [ExpectedException(typeof(ExpectedErrorException))]
         public void Fail_to_execute_non_batching_commands_during_temporary_shutdown_of_sql_server()
         {
-            try
+            Assert.Throws<ExpectedErrorException>(() =>
             {
-                using (TemporarilyShutdownSqlServerExpress())
+                try
                 {
-                    for (var i = 0; i < 100; i++)
+                    using (TemporarilyShutdownSqlServerExpress())
                     {
-                        Insert_and_select_entity();
-                        Thread.Sleep(50);
+                        for (var i = 0; i < 100; i++)
+                        {
+                            Insert_and_select_entity();
+                            Thread.Sleep(50);
+                        }
                     }
                 }
-            }
-            catch (GenericADOException e)
-            {
-                Console.WriteLine(e);
-                throw new ExpectedErrorException();
-            }
-            Assert.Fail("There was no exception when executing non batching commands during temporary shutdown of SQL server, but one was expected.");
+                catch (GenericADOException e)
+                {
+                    Console.WriteLine(e);
+                    throw new ExpectedErrorException();
+                }
+            }, "There was no exception when executing non batching commands during temporary shutdown of SQL server, but one was expected.");
         }
 
         [Test]
-        [ExpectedException(typeof(ExpectedErrorException))]
         public void Fail_to_execute_batching_commands_during_temporary_shutdown_of_sql_server()
         {
-            try
+            Assert.Throws<ExpectedErrorException>(() =>
             {
-                using (TemporarilyShutdownSqlServerExpress())
+                try
                 {
-                    for (var i = 0; i < 100; i++)
+                    using (TemporarilyShutdownSqlServerExpress())
                     {
-                        Insert_and_select_multiple_entities();
-                        Thread.Sleep(50);
+                        for (var i = 0; i < 100; i++)
+                        {
+                            Insert_and_select_multiple_entities();
+                            Thread.Sleep(50);
+                        }
                     }
                 }
-            }
-            catch (GenericADOException e)
-            {
-                Console.WriteLine(e);
-                throw new ExpectedErrorException();
-            }
-            catch (TransactionException e)
-            {
-                Console.WriteLine(e);
-                throw new ExpectedErrorException();
-            }
+                catch (GenericADOException e)
+                {
+                    Console.WriteLine(e);
+                    throw new ExpectedErrorException();
+                }
+                catch (TransactionException e)
+                {
+                    Console.WriteLine(e);
+                    throw new ExpectedErrorException();
+                }
+            });
         }
         public class ExpectedErrorException : Exception { }
     }
@@ -237,7 +240,7 @@ namespace NHibernate.SqlAzure.Tests
                 Assert.That(dbUsers, Has.Count.EqualTo(users.Count));
                 foreach (var u in dbUsers)
                 {
-                    Assert.That(u.Name, Is.StringEnding("_2_"));
+                    Assert.That(u.Name, Does.EndWith("_2_"));
                 }
             }
         }

@@ -33,8 +33,12 @@ namespace NHibernate.SqlAzure.Tests.Config
         protected FluentRunner Migrator;
 
         protected abstract string ConnectionString { get; }
+        protected bool UseNHibernateProfiler
+        {
+            get { return bool.Parse(ConfigurationManager.AppSettings["UseNHibernateProfiler"]); }
+        }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetup()
         {
             CreateTestDatabase();
@@ -46,7 +50,7 @@ namespace NHibernate.SqlAzure.Tests.Config
 
             Migrator.MigrateToLatest();
 
-            var nHibernateConfig = new NHibernateConfiguration<T>(ConnectionString);
+            var nHibernateConfig = new NHibernateConfiguration<T>(ConnectionString, useNHibernateProfiler: UseNHibernateProfiler);
             _sessionFactory = nHibernateConfig.GetSessionFactory();
         }
 

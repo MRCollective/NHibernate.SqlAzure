@@ -14,16 +14,21 @@ namespace NHibernate.SqlAzure.Tests.Config
     {
         private readonly string _connectionString;
         private readonly IPersistenceConfigurer _databaseConfig;
+        private readonly bool _useNHibernateProfiler;
 
-        public NHibernateConfiguration(string connectionString, IPersistenceConfigurer databaseConfig = null)
+        public NHibernateConfiguration(string connectionString, IPersistenceConfigurer databaseConfig = null, bool useNHibernateProfiler = false)
         {
             _connectionString = connectionString;
             _databaseConfig = databaseConfig ?? MsSqlConfiguration.MsSql2008.ConnectionString(_connectionString).Driver<T>();
+            _useNHibernateProfiler = useNHibernateProfiler;
         }
 
         public ISessionFactory GetSessionFactory()
         {
-            NHibernateProfiler.Initialize();
+            if (_useNHibernateProfiler)
+            {
+                NHibernateProfiler.Initialize();
+            }
 
             var config = Fluently.Configure()
                 .Database(_databaseConfig)
