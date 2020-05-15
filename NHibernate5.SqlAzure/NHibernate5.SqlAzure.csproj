@@ -33,11 +33,21 @@
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).xml" DestinationFolder="$(TargetDir)Combined" />
   </Target>
 
+  <PropertyGroup>
+    <NuspecFile Condition=" '$(NuspecFile)' == '' ">NHibernate5.SqlAzure.nuspec</NuspecFile>
+  </PropertyGroup>
+    <Target Name="SetNuspecProperties" AfterTargets="GetVersion">
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);version=$(GitVersion_SemVer)</NuspecProperties>
+    </PropertyGroup>
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.NetCore" Version="6.0.1312" />
     <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.Data.NetCore" Version="6.0.1312" />
-    <PackageReference Include="ILMerge" Version="3.0.29" />
     <PackageReference Include="NHibernate" Version="5.2.3" />
+    <PackageReference Include="ILMerge" Version="3.0.29" PrivateAssets="all" />
+    <PackageReference Include="GitVersionTask" Version="5.3.3" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
