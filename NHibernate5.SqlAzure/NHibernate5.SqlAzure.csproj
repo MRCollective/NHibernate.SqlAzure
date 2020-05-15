@@ -1,17 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../build-common/NHibernate.SqlAzure.props" />
+
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <RootNamespace>NHibernate.SqlAzure</RootNamespace>
     <AssemblyName>NHibernate.SqlAzure</AssemblyName>
     <AssemblyTitle>NHibernate5.SqlAzure</AssemblyTitle>
     <Product>NHibernate5.SqlAzure</Product>
     <Copyright>Copyright ©  2018</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <Target Name="ILMerge" AfterTargets="Build">
+  <!-- ILMerge can not process "portable" debug type -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+
+  <Target Name="ILMerge" AfterTargets="AfterBuild">
     <PropertyGroup>
-      <ILMergeCommand>$(ILMergeConsolePath) /ndebug /target:library ^
+      <ILMergeCommand>"$(ILMergeConsolePath)" /target:library ^
       "$(TargetPath)" ^
       "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll" ^
       "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll" ^
@@ -23,23 +34,15 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Antlr3.Runtime" Version="3.5.1" />
-    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling" Version="6.0.1304.0" />
-    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.Data" Version="6.0.1304.1" />
-    <PackageReference Include="Iesi.Collections" Version="4.0.4" />
+    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.NetCore" Version="6.0.1312" />
+    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.Data.NetCore" Version="6.0.1312" />
     <PackageReference Include="ILMerge" Version="3.0.29" />
     <PackageReference Include="NHibernate" Version="5.2.3" />
-    <PackageReference Include="Remotion.Linq" Version="2.2.0" />
-    <PackageReference Include="Remotion.Linq.EagerFetching" Version="2.2.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Net.Http" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
   </ItemGroup>
+
   <ItemGroup>
     <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\ReliableAdoNetWithDistributedTransactionFactory.cs" />
     <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\ReliableSql2008ClientDriver.cs" />

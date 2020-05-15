@@ -1,38 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../build-common/NHibernate.SqlAzure.props" />
+
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFrameworks>net461;netcoreapp3.1</TargetFrameworks>
     <AssemblyTitle>NHibernate5.SqlAzure.Tests</AssemblyTitle>
     <Product>NHibernate5.SqlAzure.Tests</Product>
     <Copyright>Copyright ©  2018</Copyright>
   </PropertyGroup>
+
+  <Target Name="CopyAppConfigForNetCoreApp" AfterTargets="Build" Condition="$(IsNetCoreAppBuild)">
+    <Message Text="Copying app.config to $(OutDir)\testhost.dll.config" Importance="high" />
+    <Copy SourceFiles="App.config" DestinationFiles="$(OutDir)\testhost.dll.config" />
+  </Target>
+
   <ItemGroup>
-    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling" Version="6.0.1304.0" />
-    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.Data" Version="6.0.1304.1" />
+    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.NetCore" Version="6.0.1312" />
+    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.Data.NetCore" Version="6.0.1312" />
     <PackageReference Include="FluentMigrator" Version="3.2.6" />
     <PackageReference Include="FluentMigrator.Runner" Version="3.2.6" />
-    <PackageReference Include="FluentNHibernate" Version="2.0.3.0" />
-    <PackageReference Include="Iesi.Collections" Version="4.0.4" />
+    <PackageReference Include="FluentNHibernate" Version="2.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="3.0.61" />
-    <PackageReference Include="NBuilder" Version="3.0.1.1" />
+    <PackageReference Include="NBuilder" Version="6.1.0" />
     <PackageReference Include="NHibernate" Version="5.2.3" />
     <PackageReference Include="NHibernateProfiler" Version="5.0.5044" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.ServiceModel" />
+  <ItemGroup Condition="$(IsNetFxBuild)">
     <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Transactions" />
+  </ItemGroup>
+  <ItemGroup Condition="$(IsNetCoreAppBuild)">
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure.Tests\Properties\AssemblyInfo.cs" />
     <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure.Tests\obj\**" />
     <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure.Tests\bin\**" />
   </ItemGroup>
