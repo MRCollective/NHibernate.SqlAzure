@@ -35,7 +35,6 @@
   </ItemGroup>
   <ItemGroup Condition="$(IsNetCoreAppBuild)">
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,7 @@
     </language>
     <dependencies>
       <dependency id="NHibernate" version="[5.2, 5.3)" />
+      <dependency id="System.Data.SqlClient" version="4.4.0" />
     </dependencies>
   </metadata>
   <files>

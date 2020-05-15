@@ -48,11 +48,8 @@
     <PackageReference Include="NHibernate" Version="5.2.3" />
     <PackageReference Include="ILMerge" Version="3.0.29" PrivateAssets="all" />
     <PackageReference Include="GitVersionTask" Version="5.3.3" PrivateAssets="all" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
-  </ItemGroup>
-
   <ItemGroup>
     <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\ReliableAdoNetWithDistributedTransactionFactory.cs" />
     <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\ReliableSql2008ClientDriver.cs" />
