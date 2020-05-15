@@ -37,9 +37,10 @@
     </dependencies>
   </metadata>
   <files>
-     <file src="bin\Release\Combined\NHibernate.SqlAzure.dll" target="lib\NET45" />
-     <file src="bin\Release\Combined\NHibernate.SqlAzure.pdb" target="lib\NET45" />
-     <file src="bin\Release\Combined\NHibernate.SqlAzure.XML" target="lib\NET45" />
-     <file src="..\NHibernate.SqlAzure\**\*.cs" exclude="..\NHibernate.SqlAzure\obj\**\*.*" target="src" />
+    <file src="bin\Release\Combined\NHibernate.SqlAzure.dll" target="lib\netstandard2.0" />
+    <file src="bin\Release\Combined\NHibernate.SqlAzure.pdb" target="lib\netstandard2.0" />
+    <file src="bin\Release\Combined\NHibernate.SqlAzure.XML" target="lib\netstandard2.0" />
+    <file src="..\NHibernate.SqlAzure\**\*.cs" exclude="..\NHibernate.SqlAzure\obj\**\*.*" target="src" />
+    <file src="**\*.cs" exclude="obj\**\*.*" target="src" />
   </files>
 </package>
