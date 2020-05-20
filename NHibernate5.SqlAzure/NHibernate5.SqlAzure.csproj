@@ -1,120 +1,65 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../build-common/NHibernate.SqlAzure.props" />
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{895B6F59-B5BE-4796-847D-C3FF2C7EED66}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <RootNamespace>NHibernate.SqlAzure</RootNamespace>
     <AssemblyName>NHibernate.SqlAzure</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <AssemblyTitle>NHibernate5.SqlAzure</AssemblyTitle>
+    <Product>NHibernate5.SqlAzure</Product>
+    <Copyright>Copyright ©  2018</Copyright>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+
+  <!-- ILMerge can not process "portable" debug type -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\NHibernate.SqlAzure.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\NHibernate.SqlAzure.xml</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr3.Runtime.3.5.1\lib\net40-client\Antlr3.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Iesi.Collections, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Iesi.Collections.4.0.4\lib\net461\Iesi.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate, Version=5.2.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <HintPath>..\packages\NHibernate.5.2.3\lib\net461\NHibernate.dll</HintPath>
-    </Reference>
-    <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="Remotion.Linq.EagerFetching, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Remotion.Linq.EagerFetching.2.2.0\lib\net45\Remotion.Linq.EagerFetching.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\NHibernate.SqlAzure\DefaultReliableSql2008ClientDriver.cs">
-      <Link>DefaultReliableSql2008ClientDriver.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableAdoNetTransactionFactory.cs">
-      <Link>ReliableAdoNetTransactionFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableAdoTransaction.cs">
-      <Link>ReliableAdoTransaction.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableSqlClientBatchingBatcherFactory.cs">
-      <Link>ReliableSqlClientBatchingBatcherFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\ReliableSqlDbConnection.cs">
-      <Link>ReliableSqlDbConnection.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\RetryStrategies\SqlAzureTransientErrorDetectionStrategy.cs">
-      <Link>SqlAzureTransientErrorDetectionStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\RetryStrategies\SqlAzureTransientErrorDetectionStrategyWithTimeouts.cs">
-      <Link>SqlAzureTransientErrorDetectionStrategyWithTimeouts.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\SqlAzureClientDriver.cs">
-      <Link>SqlAzureClientDriver.cs</Link>
-    </Compile>
-    <Compile Include="..\NHibernate.SqlAzure\SqlAzureClientDriverWithTimeoutRetries.cs">
-      <Link>SqlAzureClientDriverWithTimeoutRetries.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReliableAdoNetWithDistributedTransactionFactory.cs" />
-    <Compile Include="ReliableSql2008ClientDriver.cs" />
-    <Compile Include="ReliableSqlClientBatchingBatcher.cs" />
-    <Compile Include="ReliableSqlCommand.cs">
-      <SubType>Component</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="NHibernate5.SqlAzure.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="NHibernate5.SqlAzure.Standalone.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <Target Name="ILMerge" AfterTargets="AfterBuild">
+    <PropertyGroup>
+      <ILMergeCommand>"$(ILMergeConsolePath)" /target:library ^
+      "$(TargetPath)" ^
+      "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll" ^
+      "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll" ^
+      /out:"$(TargetDir)Combined\NHibernate.SqlAzure.dll"</ILMergeCommand>
+    </PropertyGroup>
+    <MakeDir Directories="$(TargetDir)Combined" />
+    <Exec Command="$(ILMergeCommand)" />
+    <Copy SourceFiles="$(TargetDir)$(AssemblyName).xml" DestinationFolder="$(TargetDir)Combined" />
+  </Target>
+
   <PropertyGroup>
-    <PostBuildEvent>mkdir "$(TargetDir)Combined"
-"$(ProjectDir)..\packages\ilmerge.2.14.1208\tools\ILMerge.exe" /log:log.txt /v4 /target:library "$(TargetPath)" "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll" "$(TargetDir)Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll" /out:"$(TargetDir)Combined\NHibernate.SqlAzure.dll"
-copy "$(TargetDir)NHibernate.SqlAzure.XML" "$(TargetDir)Combined\NHibernate.SqlAzure.XML"</PostBuildEvent>
+    <NuspecFile Condition=" '$(NuspecFile)' == '' ">NHibernate5.SqlAzure.nuspec</NuspecFile>
   </PropertyGroup>
+    <Target Name="SetNuspecProperties" AfterTargets="GetVersion">
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);version=$(GitVersion_SemVer)</NuspecProperties>
+    </PropertyGroup>
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.NetCore" Version="6.0.1312" />
+    <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.Data.NetCore" Version="6.0.1312" />
+    <PackageReference Include="NHibernate" Version="5.2.3" />
+    <PackageReference Include="ILMerge" Version="3.0.29" PrivateAssets="all" />
+    <PackageReference Include="GitVersionTask" Version="5.3.3" PrivateAssets="all" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\ReliableAdoNetWithDistributedTransactionFactory.cs" />
+    <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\ReliableSql2008ClientDriver.cs" />
+    <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\ReliableSqlClientBatchingBatcher.cs" />
+    <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\ReliableSqlCommand.cs" />
+    <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\Properties\AssemblyInfo.cs" />
+    <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\obj\**" />
+    <ExcludeNHibernateSqlAzure Include="..\NHibernate.SqlAzure\bin\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\NHibernate.SqlAzure\**\*.cs" Exclude="@(ExcludeNHibernateSqlAzure)" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,17 @@
+<Project>
+
+  <PropertyGroup>
+    <IsNetFxBuild>false</IsNetFxBuild>
+    <IsNetFxBuild Condition="$(TargetFramework.StartsWith('net4'))">true</IsNetFxBuild>
+    <DefineConstants Condition="$(IsNetFxBuild)">NETFX;$(DefineConstants)</DefineConstants>
+
+    <IsNetCoreAppBuild>false</IsNetCoreAppBuild>
+    <IsNetCoreAppBuild Condition="$(TargetFramework.StartsWith('netcoreapp'))">true</IsNetCoreAppBuild>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <TreatSpecificWarningsAsErrors />
+  </PropertyGroup>
+
+</Project>

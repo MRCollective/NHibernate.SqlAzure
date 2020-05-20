@@ -13,15 +13,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.SqlAzure.Tests", "NHibernate.SqlAzure.Tests\NHibernate.SqlAzure.Tests.csproj", "{887FD0A4-B8E0-4B3D-BF7E-4CC7090EB829}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate.SqlAzure.Tests", "NHibernate.SqlAzure.Tests\NHibernate.SqlAzure.Tests.csproj", "{887FD0A4-B8E0-4B3D-BF7E-4CC7090EB829}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate4.SqlAzure", "NHibernate4.SqlAzure\NHibernate4.SqlAzure.csproj", "{BF649532-3E8A-4DC7-9F43-9AB25E475BF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate4.SqlAzure.Tests", "NHibernate4.SqlAzure.Tests\NHibernate4.SqlAzure.Tests.csproj", "{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate4.SqlAzure.Tests", "NHibernate4.SqlAzure.Tests\NHibernate4.SqlAzure.Tests.csproj", "{4864689E-5B40-4EA2-A797-63B2AEBFE5DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate5.SqlAzure", "NHibernate5.SqlAzure\NHibernate5.SqlAzure.csproj", "{895B6F59-B5BE-4796-847D-C3FF2C7EED66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate5.SqlAzure", "NHibernate5.SqlAzure\NHibernate5.SqlAzure.csproj", "{895B6F59-B5BE-4796-847D-C3FF2C7EED66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate5.SqlAzure.Tests", "NHibernate5.SqlAzure.Tests\NHibernate5.SqlAzure.Tests.csproj", "{BF71D707-D321-40DB-97CB-3A3A02F345D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate5.SqlAzure.Tests", "NHibernate5.SqlAzure.Tests\NHibernate5.SqlAzure.Tests.csproj", "{BF71D707-D321-40DB-97CB-3A3A02F345D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build-common", "build-common", "{1D8F31F4-C15B-4DF2-9636-7585232461AD}"
+	ProjectSection(SolutionItems) = preProject
+		build-common\NHibernate.SqlAzure.props = build-common\NHibernate.SqlAzure.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

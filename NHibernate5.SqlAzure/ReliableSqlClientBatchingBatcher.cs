@@ -1,4 +1,5 @@
-﻿// Parts of this file were copied from NHibernate.AdoNet.SqlClientBatchingBatcherFactory, but modified to use ReliableSqlDbConnection
+﻿#if NETFX
+// Parts of this file were copied from NHibernate.AdoNet.SqlClientBatchingBatcherFactory, but modified to use ReliableSqlDbConnection
 // The #regions indicate the copied code
 using System;
 using System.Data;
@@ -17,15 +18,15 @@ namespace NHibernate.SqlAzure
     /// </summary>
     public class ReliableSqlClientBatchingBatcher : SqlClientBatchingBatcher
     {
-        #region Impersonate private fields in base class
+#region Impersonate private fields in base class
         private readonly ConnectionManager _connectionManager;
         private readonly FieldInfo _totalExpectedRowsAffectedField = typeof(SqlClientBatchingBatcher)
             .GetField("_totalExpectedRowsAffected", BindingFlags.NonPublic | BindingFlags.Instance);
-        private readonly FieldInfo _currentBatchField = typeof (SqlClientBatchingBatcher)
+        private readonly FieldInfo _currentBatchField = typeof(SqlClientBatchingBatcher)
             .GetField("_currentBatch", BindingFlags.NonPublic | BindingFlags.Instance);
         private readonly FieldInfo _currentBatchCommandsLogField = typeof(SqlClientBatchingBatcher)
             .GetField("_currentBatchCommandsLog", BindingFlags.NonPublic | BindingFlags.Instance);
-        private readonly MethodInfo _createConfiguredBatchMethod = typeof (SqlClientBatchingBatcher)
+        private readonly MethodInfo _createConfiguredBatchMethod = typeof(SqlClientBatchingBatcher)
             .GetMethod("CreateConfiguredBatch", BindingFlags.Instance | BindingFlags.NonPublic);
 
         // ReSharper disable InconsistentNaming
@@ -41,7 +42,7 @@ namespace NHibernate.SqlAzure
         }
         private StringBuilder _currentBatchCommandsLog
         {
-            get { return (StringBuilder) _currentBatchCommandsLogField.GetValue(this); }
+            get { return (StringBuilder)_currentBatchCommandsLogField.GetValue(this); }
             set { _currentBatchCommandsLogField.SetValue(this, value); }
         }
         private int _batchSize
@@ -54,17 +55,17 @@ namespace NHibernate.SqlAzure
         {
             return (SqlClientSqlCommandSet)_createConfiguredBatchMethod.Invoke(this, null);
         }
-        
+
         public ReliableSqlClientBatchingBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
             : base(connectionManager, interceptor)
         {
             _connectionManager = connectionManager;
         }
-        #endregion
+#endregion
 
         public override void AddToBatch(IExpectation expectation)
         {
-            #region NHibernate code
+#region NHibernate code
             _totalExpectedRowsAffected += expectation.ExpectedRowCount;
             DbCommand batchUpdate = CurrentCommand;
             Driver.AdjustCommand(batchUpdate);
@@ -84,20 +85,20 @@ namespace NHibernate.SqlAzure
             {
                 Log.Debug("Adding to batch:" + lineWithParameters);
             }
-            #endregion
+#endregion
             _currentBatch.Append((System.Data.SqlClient.SqlCommand)(ReliableSqlCommand)batchUpdate);
-            #region NHibernate code
+#region NHibernate code
             if (_currentBatch.CountOfCommands >= _batchSize)
             {
                 ExecuteBatchWithTiming(batchUpdate);
             }
-            #endregion
+#endregion
         }
 
         // Need this method call in this class rather than the base class to ensure Prepare is called... if only it was virtual :(
         protected void ExecuteBatch(IDbCommand ps)
         {
-            #region NHibernate code
+#region NHibernate code
             Log.Debug("Executing batch");
             CheckReaders();
             Prepare(_currentBatch.BatchCommand);
@@ -122,7 +123,7 @@ namespace NHibernate.SqlAzure
             _currentBatch.Dispose();
             _totalExpectedRowsAffected = 0;
             _currentBatch = CreateConfiguredBatch();
-            #endregion
+#endregion
         }
 
         /// <summary>
@@ -139,30 +140,30 @@ namespace NHibernate.SqlAzure
             {
                 var sessionConnection = (ReliableSqlDbConnection)_connectionManager.GetConnection();
 
-                #region NHibernate code
+#region NHibernate code
                 if (cmd.Connection != null)
                 {
                     // make sure the commands connection is the same as the Sessions connection
                     // these can be different when the session is disconnected and then reconnected
                     if (cmd.Connection != sessionConnection)
                     {
-                        cmd.Connection = (System.Data.SqlClient.SqlConnection) sessionConnection;
+                        cmd.Connection = (System.Data.SqlClient.SqlConnection)sessionConnection;
                     }
                 }
                 else
                 {
-                    cmd.Connection = (System.Data.SqlClient.SqlConnection) sessionConnection;
+                    cmd.Connection = (System.Data.SqlClient.SqlConnection)sessionConnection;
                 }
 
                 _connectionManager.Transaction.Enlist(cmd);
                 Driver.PrepareCommand(cmd);
-                #endregion
+#endregion
             }
             catch (InvalidOperationException ioe)
             {
-                #region NHibernate code
+#region NHibernate code
                 throw new ADOException("While preparing " + cmd.CommandText + " an error occurred", ioe);
-                #endregion
+#endregion
             }
         }
 
@@ -173,3 +174,31 @@ namespace NHibernate.SqlAzure
         }
     }
 }
+#else
+using System.Data.Common;
+using NHibernate.AdoNet;
+
+namespace NHibernate.SqlAzure
+{
+    /// <summary>
+    /// Exposes <see cref="GenericBatchingBatcher"/> functionality when a <see cref="ReliableSqlDbConnection"/>
+    /// connection is being used.
+    /// </summary>
+    public class ReliableSqlClientBatchingBatcher : GenericBatchingBatcher
+    {
+        private readonly ConnectionManager _connectionManager;
+
+        public ReliableSqlClientBatchingBatcher(ConnectionManager connectionManager, IInterceptor interceptor)
+            : base(connectionManager, interceptor)
+        {
+            _connectionManager = connectionManager;
+        }
+
+        protected override void DoExecuteBatch(DbCommand ps)
+        {
+            var connection = (ReliableSqlDbConnection)_connectionManager.GetConnection();
+            ReliableAdoTransaction.ExecuteWithRetry(connection, () => base.DoExecuteBatch(ps));
+        }
+    }
+}
+#endif
