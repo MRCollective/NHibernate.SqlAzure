@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.Common;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using NHibernate.AdoNet;
 using NHibernate.AdoNet.Util;
 using NHibernate.Exceptions;
@@ -94,35 +96,125 @@ namespace NHibernate.SqlAzure
             #endregion
         }
 
-        // Need this method call in this class rather than the base class to ensure Prepare is called... if only it was virtual :(
-        protected void ExecuteBatch(IDbCommand ps)
+        public override Task AddToBatchAsync(IExpectation expectation, CancellationToken cancellationToken)
         {
             #region NHibernate code
-            Log.Debug("Executing batch");
-            CheckReaders();
-            Prepare(_currentBatch.BatchCommand);
-            if (Factory.Settings.SqlStatementLogger.IsDebugEnabled)
+            if (cancellationToken.IsCancellationRequested)
             {
-                Factory.Settings.SqlStatementLogger.LogBatchCommand(_currentBatchCommandsLog.ToString());
-                _currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
+                return Task.FromCanceled<object>(cancellationToken);
             }
-
-            int rowsAffected;
             try
             {
-                rowsAffected = _currentBatch.ExecuteNonQuery();
+                _totalExpectedRowsAffected += expectation.ExpectedRowCount;
+                var batchUpdate = CurrentCommand;
+                Driver.AdjustCommand(batchUpdate);
+                string lineWithParameters = null;
+                var sqlStatementLogger = Factory.Settings.SqlStatementLogger;
+                if (sqlStatementLogger.IsDebugEnabled || Log.IsDebugEnabled())
+                {
+                    lineWithParameters = sqlStatementLogger.GetCommandLineWithParameters(batchUpdate);
+                    var formatStyle = sqlStatementLogger.DetermineActualStyle(FormatStyle.Basic);
+                    lineWithParameters = formatStyle.Formatter.Format(lineWithParameters);
+                    _currentBatchCommandsLog.Append("command ")
+                        .Append(_currentBatch.CountOfCommands)
+                        .Append(":")
+                        .AppendLine(lineWithParameters);
+                }
+                if (Log.IsDebugEnabled())
+                {
+                    Log.Debug("Adding to batch:{0}", lineWithParameters);
+                }
+                #endregion
+
+                _currentBatch.Append((System.Data.SqlClient.SqlCommand)(ReliableSqlCommand)batchUpdate);
+
+                #region NHibernate code
+                if (_currentBatch.CountOfCommands >= _batchSize)
+                {
+                    return ExecuteBatchWithTimingAsync(batchUpdate, cancellationToken);
+                }
+                return Task.CompletedTask;
             }
-            catch (DbException e)
+            catch (Exception ex)
             {
-                throw ADOExceptionHelper.Convert(Factory.SQLExceptionConverter, e, "could not execute batch command.");
+                return Task.FromException<object>(ex);
             }
+            #endregion
+        }
 
-            Expectations.VerifyOutcomeBatched(_totalExpectedRowsAffected, rowsAffected);
+        // Need this method call in this class rather than the base class to ensure Prepare is called... if only it was virtual :(
+        protected void ExecuteBatch(DbCommand ps)
+        {
+            try
+            {
+                Log.Debug("Executing batch");
+                CheckReaders();
+                Prepare(_currentBatch.BatchCommand);
+                if (Factory.Settings.SqlStatementLogger.IsDebugEnabled)
+                {
+                    Factory.Settings.SqlStatementLogger.LogBatchCommand(_currentBatchCommandsLog.ToString());
+                }
+                int rowsAffected;
+                try
+                {
+                    rowsAffected = _currentBatch.ExecuteNonQuery();
+                }
+                catch (DbException e)
+                {
+                    throw ADOExceptionHelper.Convert(Factory.SQLExceptionConverter, e, "could not execute batch command.");
+                }
 
+                Expectations.VerifyOutcomeBatched(_totalExpectedRowsAffected, rowsAffected, ps);
+            }
+            finally
+            {
+                ClearCurrentBatch();
+            }
+        }
+
+        #region Possible Future Use if async support for retries is added (commented out)
+        // protected async Task ExecuteBatchAsync(DbCommand ps, CancellationToken cancellationToken)
+        // {
+        //     cancellationToken.ThrowIfCancellationRequested();
+        //     try
+        //     {
+        //         Log.Debug("Executing batch");
+        //         await (CheckReadersAsync(cancellationToken)).ConfigureAwait(false);
+        //         await (PrepareAsync(_currentBatch.BatchCommand, cancellationToken)).ConfigureAwait(false);
+        //         if (Factory.Settings.SqlStatementLogger.IsDebugEnabled)
+        //         {
+        //             Factory.Settings.SqlStatementLogger.LogBatchCommand(_currentBatchCommandsLog.ToString());
+        //         }
+        //         int rowsAffected;
+        //         try
+        //         {
+        //             rowsAffected = _currentBatch.ExecuteNonQuery();
+        //         }
+        //         catch (DbException e)
+        //         {
+        //             throw ADOExceptionHelper.Convert(Factory.SQLExceptionConverter, e, "could not execute batch command.");
+        //         }
+        //
+        //         Expectations.VerifyOutcomeBatched(_totalExpectedRowsAffected, rowsAffected, ps);
+        //     }
+        //     finally
+        //     {
+        //         ClearCurrentBatch();
+        //     }
+        // }
+        #endregion
+        
+        // Copied from NHibernate base class
+        private void ClearCurrentBatch()
+        {
             _currentBatch.Dispose();
             _totalExpectedRowsAffected = 0;
             _currentBatch = CreateConfiguredBatch();
-            #endregion
+
+            if (Factory.Settings.SqlStatementLogger.IsDebugEnabled)
+            {
+                _currentBatchCommandsLog = new StringBuilder().AppendLine("Batch commands:");
+            }
         }
 
         /// <summary>
@@ -133,7 +225,7 @@ namespace NHibernate.SqlAzure
         /// and <see cref="DbTransaction"/> if one exists.  It will call <c>Prepare</c> if the Driver
         /// supports preparing commands.
         /// </remarks>
-        protected new void Prepare(DbCommand cmd)
+        private new void Prepare(DbCommand cmd)
         {
             try
             {
@@ -154,7 +246,7 @@ namespace NHibernate.SqlAzure
                     cmd.Connection = (System.Data.SqlClient.SqlConnection) sessionConnection;
                 }
 
-                _connectionManager.Transaction.Enlist(cmd);
+                _connectionManager.CurrentTransaction?.Enlist(cmd);
                 Driver.PrepareCommand(cmd);
                 #endregion
             }
@@ -170,6 +262,15 @@ namespace NHibernate.SqlAzure
         {
             var connection = (ReliableSqlDbConnection)_connectionManager.GetConnection();
             ReliableAdoTransaction.ExecuteWithRetry(connection, () => ExecuteBatch(ps));
+        }
+        
+        protected override async Task DoExecuteBatchAsync(DbCommand ps, CancellationToken cancellationToken)
+        {
+            var connection = (ReliableSqlDbConnection) await _connectionManager.GetConnectionAsync(cancellationToken);
+            ReliableAdoTransaction.ExecuteWithRetry(connection, () => ExecuteBatch(ps));
+            
+            // NOTE: To support full async, changes will need to be made all the way through to Enterprise Library code
+            // ReliableAdoTransaction.ExecuteWithRetry(connection, async () => await ExecuteBatchAsync(ps, cancellationToken));
         }
     }
 }
