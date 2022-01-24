@@ -101,8 +101,8 @@ namespace NHibernate.SqlAzure.Tests
         public static SqlException GetSqlException(int errorCode)
         {
             var collection = (SqlErrorCollection)Activator.CreateInstance(typeof(SqlErrorCollection), true);
-            var error = (SqlError)Activator.CreateInstance(typeof(SqlError), BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { errorCode, (byte)2, (byte)3, "server name", "error message", "proc", 100 }, null);
-
+            var error = (SqlError)Activator.CreateInstance(typeof(SqlError), BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { errorCode, (byte)2, (byte)3, "server name", "error message", "proc", 100, (Exception)null }, null);
+            
             typeof(SqlErrorCollection)
                 .GetMethod("Add", BindingFlags.NonPublic | BindingFlags.Instance)
                 .Invoke(collection, new object[] { error });

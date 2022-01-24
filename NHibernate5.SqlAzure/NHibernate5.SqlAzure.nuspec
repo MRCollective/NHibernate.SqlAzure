@@ -5,7 +5,7 @@
        NHibernate5.SqlAzure
     </id>
     <version>
-       2.0.0
+       $version$
     </version>
     <authors>
        Robert Moore, Matthew Davies
@@ -33,13 +33,15 @@
        en-US 
     </language>
     <dependencies>
-      <dependency id="NHibernate" version="[5.1, 5.3)" />
+      <dependency id="NHibernate" version="[5.2, 5.3)" />
+      <dependency id="System.Data.SqlClient" version="4.4.0" />
     </dependencies>
   </metadata>
   <files>
-     <file src="bin\Release\Combined\NHibernate.SqlAzure.dll" target="lib\NET45" />
-     <file src="bin\Release\Combined\NHibernate.SqlAzure.pdb" target="lib\NET45" />
-     <file src="bin\Release\Combined\NHibernate.SqlAzure.XML" target="lib\NET45" />
-     <file src="..\NHibernate.SqlAzure\**\*.cs" exclude="..\NHibernate.SqlAzure\obj\**\*.*" target="src" />
+    <file src="bin\Release\netstandard2.0\Combined\NHibernate.SqlAzure.dll" target="lib\netstandard2.0" />
+    <file src="bin\Release\netstandard2.0\Combined\NHibernate.SqlAzure.pdb" target="lib\netstandard2.0" />
+    <file src="bin\Release\netstandard2.0\Combined\NHibernate.SqlAzure.xml" target="lib\netstandard2.0" />
+    <file src="..\NHibernate.SqlAzure\**\*.cs" exclude="..\NHibernate.SqlAzure\obj\**\*.*" target="src" />
+    <file src="**\*.cs" exclude="obj\**\*.*" target="src" />
   </files>
 </package>
